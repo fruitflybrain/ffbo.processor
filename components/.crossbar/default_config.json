@@ -64,6 +64,37 @@
                         "port":8082
                     },
                     "type":"web"
+                },
+                {
+                    "paths":{
+                        "ws":{
+                            "type":"websocket",
+                            "auth":{
+                                "wampcra":{
+                                    "authenticator":"ffbo.auth_server.auth",
+                                    "type":"dynamic"
+                                },
+                                "anonymous":{
+                                    "type":"static",
+                                    "role":"anonymous"
+                                }
+                            }
+                        },
+                        "/":{
+                            "directory":"../web/sandbox",
+                            "type":"static"
+                        }
+                    },
+                    "endpoint":{
+                        "tls":{
+                            "dhparam":"dhparam",
+                            "certificate":"",
+                            "key":""
+                        },
+                        "type":"tcp",
+                        "port":8083
+                    },
+                    "type":"web"
                 }
             ],
             "options":{
