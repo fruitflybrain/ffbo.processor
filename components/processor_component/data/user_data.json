@@ -1,0 +1,38 @@
+{
+    "_default": {
+        "1": {
+            "username": "component",
+            "user_details": {
+                "lname": "",
+                "position": "",
+                "email": "",
+                "fname": "",
+                "affiliation": ""
+            },
+            "auth_details": {
+                "role": "components",
+                "secret": "RvZP/fuEcs4u+C3yhuIT7FKAT31uuQSZRHzaZa40BZ4=",
+                "salt": "fruitfly",
+                "iterations": 5000,
+                "keylen": 32
+            }
+        },
+        "2": {
+            "username": "guest",
+            "user_details": {
+                "lname": "",
+                "position": "",
+                "email": "",
+                "fname": "Anonymous",
+                "affiliation": ""
+            },
+            "auth_details": {
+                "role": "user",
+                "secret": "Y/w6jYBIOLM48hEKn9zRLx9gZCYwwrFW7K/ELtWzVT8=",
+                "salt": "guestsalt",
+                "iterations": 5000,
+                "keylen": 32
+            }
+        }
+    }
+}
