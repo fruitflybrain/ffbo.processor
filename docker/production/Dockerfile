@@ -18,11 +18,11 @@ RUN pip install -U pip && pip install autobahn[twisted] && pip install crossbar
 
 RUN pip install numpy
 RUN pip install pandas
+RUN pip install beautifulsoup4
 
 # Install SMTP mail server
 RUN apt-get update
 RUN apt-get install -y sendmail
-
 
 # Install processor_component into the docker container
 WORKDIR /app

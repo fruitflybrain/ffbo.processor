@@ -1,12 +1,11 @@
 ###########################################
-# run using: docker build -t ffbo/proessor_component:develop .
-# build using : docker run --name processor_component -v $(dirname `pwd`):/processor_component  -p 8080:8080 -p 8081:8081 -p 8082:8082 -it ffbo/processor_component:develop sh /processor_component/components/run_server.sh
+# build using :  docker build -t ffbo/processor:develop .
 ###########################################
 FROM python:2
 
 MAINTAINER Adam Tomkins <a.tomkins@sheffield.ac.uk>
 
-ENV HOME /app
+ENV HOME /
 ENV DEBIAN_FRONTEND noninteractive
 
 # Crossbar.io connection defaults
@@ -16,8 +15,12 @@ ENV CBREALM realm1
 # install Autobahn|Python
 RUN pip install -U pip && pip install autobahn[twisted] && pip install crossbar
 
+# install ffbo.processor dependecies
 RUN pip install numpy
 RUN pip install pandas
+RUN pip install beautifulsoup4
+RUN pip install tinydb
+
 
 # Install SMTP mail server
 RUN apt-get update

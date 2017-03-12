@@ -34,7 +34,7 @@ args = parser.parse_args()
 print("Generating Crossbar configuration file...")
 
 # load default configuration
-default_config = json.load(open("components/.crossbar/default_config.json"));
+default_config = json.load(open(os.path.join(os.path.dirname(__file__),"components/.crossbar/default_config.json")));
 
 # handle sandbox options
 if args.sandbox:

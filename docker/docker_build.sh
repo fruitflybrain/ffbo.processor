@@ -1,1 +1,1 @@
-docker build -t ffbo/proessor_component:develop .
+docker build -t ffbo/processor:develop .
