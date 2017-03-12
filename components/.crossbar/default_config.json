@@ -239,6 +239,21 @@
                                         "caller":true
                                     },
                                     "cache":true,
+                                    "uri":"ffbo.nk",
+                                    "allow":{
+                                        "subscribe":true,
+                                        "register":true,
+                                        "call":true,
+                                        "publish":true
+                                    },
+                                    "match":"prefix"
+                                },
+                                {
+                                    "disclose":{
+                                        "publisher":true,
+                                        "caller":true
+                                    },
+                                    "cache":true,
                                     "uri":"",
                                     "allow":{
                                         "subscribe":true,
