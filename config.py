@@ -39,7 +39,7 @@ default_config = json.load(open("components/.crossbar/default_config.json"));
 # handle sandbox options
 if args.sandbox:
     default_config["workers"][0]["transports"][2]["endpoint"]["port"] = args.sandbox_port
-    default_config["workers"][0]["transports"][2]["paths"]["/"]["directory"] = os.path.realpath(args.sandbox_path)
+    default_config["workers"][0]["transports"][2]["paths"]["/"]["directory"] = args.sandbox_path
 else:
     del default_config["workers"][0]["transports"][2]
 
@@ -54,11 +54,11 @@ else:
 
 # handle NLP options
 default_config["workers"][0]["transports"][0]["endpoint"]["port"] = args.nlp_port
-default_config["workers"][0]["transports"][0]["paths"]["/"]["directory"] = os.path.realpath(args.nlp_path)
+default_config["workers"][0]["transports"][0]["paths"]["/"]["directory"] = args.nlp_path
 
 # handle GFX options
 default_config["workers"][0]["transports"][1]["endpoint"]["port"] = args.gfx_port
-default_config["workers"][0]["transports"][1]["paths"]["/"]["directory"] = os.path.realpath(args.gfx_path)
+default_config["workers"][0]["transports"][1]["paths"]["/"]["directory"] = args.gfx_path
 
 # dump the reconfigured json
 json.dump(default_config, open(os.path.join(args.path, args.filename), "w"),
