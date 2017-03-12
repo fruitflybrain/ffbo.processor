@@ -1,0 +1,1 @@
+docker run --name processor_component -v $(dirname `pwd`):/processor_component  -p 8080:8080 -p 8081:8081 -p 8082:8082 -it ffbo/processor_component:develop sh /processor_component/components/run_server.sh
