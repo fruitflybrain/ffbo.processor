@@ -321,6 +321,11 @@
                             },
                             {
                                 "limit":1000,
+                                "uri":"ffbo.nk",
+                                "match":"prefix"
+                            },
+                            {
+                                "limit":1000,
                                 "uri":"ffbo.na.query_to_processor",
                                 "match":"prefix"
                             }
