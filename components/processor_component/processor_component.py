@@ -50,7 +50,6 @@ class AppSession(ApplicationSession):
         directory = {
                 'nlp':{},
                 'na' :{},
-            'na_model' :{},
             'nk': {}
                 }
 
@@ -273,8 +272,8 @@ class AppSession(ApplicationSession):
             try:
                 #build up server calls
                 rpc_calls = {}
-                rpc_calls['na_model'] = "ffbo.%(s_type)s.query.%(s_id)s" % \
-                                        {'s_id':    request['servers']['na_model'],
+                rpc_calls['na'] = "ffbo.%(s_type)s.query.%(s_id)s" % \
+                                        {'s_id':    request['servers']['na'],
                                          's_type':  'na'}
                 rpc_calls['nk'] = "ffbo.%(s_type)s.launch.%(s_id)s" % \
                                   {'s_id':    request['servers']['nk'],
@@ -291,12 +290,12 @@ class AppSession(ApplicationSession):
                 na_task = {'user': request['user'],
                            'command': {"retrieve":{"state":0}},
                            'format': "nk"}
-                self.log.info("process_nk_request() accessed on NA_MODEL server {server_id} with query: {query}",
-                                      server_id=rpc_calls['na_model'], query=na_task)
+                self.log.info("process_nk_request() accessed on NA server {server_id} with query: {query}",
+                                      server_id=rpc_calls['na'], query=na_task)
 
-                na_res =  yield self.call(rpc_calls['na_model'], na_task)
+                na_res =  yield self.call(rpc_calls['na'], na_task)
                 self.log.info("process_nk_request() accessed on NA server {server_id} with result: {result}",
-                              server_id=rpc_calls['na_model'],result=na_res)
+                              server_id=rpc_calls['na'],result=na_res)
 
             except ApplicationError as e:
                 self.log.warn("Processor failed to access NLP server {server_id}, with error {e}",
