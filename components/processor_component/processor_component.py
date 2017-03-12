@@ -511,7 +511,7 @@ class AppSession(ApplicationSession):
                 result =  yield self.call('ffbo.na.query.'+str(request['server']), request, options=CallOptions(on_progress=on_progress))
                 self.log.info("na_query returned with result")
 
-                if result is None:
+                if progressive_result:
                     result = progressive_result
 
                 # Catch no results and return
