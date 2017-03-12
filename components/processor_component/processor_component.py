@@ -217,12 +217,12 @@ class AppSession(ApplicationSession):
 
             try:
                 if nlp_res == {}:
-                    yield self.call(rpc_calls['user_msg'], {'info':{'error':
+                    yield self.call(rpc_calls['user_msg'], {'info':{'error':\
                                                 'NLP module could not parse your input'}})
                     self.log.warn("{server_id} failed to parse query: {query}}",
                                   server_id=rpc_calls['nlp'],query=request['nlp_query'])
                     returnValue(None)
-                yield self.call(rpc_calls['user_msg'], {'info':{'success':
+                yield self.call(rpc_calls['user_msg'], {'info':{'success':\
                                     'NLP module successfully parsed your input'}})
                 nlp_res['user_msg'] = rpc_calls['user_msg']
                 for key in request:
@@ -239,7 +239,7 @@ class AppSession(ApplicationSession):
 
                 na_res = yield self.call(rpc_calls['na'], nlp_res)
                 if not na_res:
-                    yield self.call(rpc_calls['user_msg'], {'info':{'error':
+                    yield self.call(rpc_calls['user_msg'], {'info':{'error':\
                                         'Failed to execute query on Neuroarch'}})
                     returnValue(None)
                 else:
@@ -251,7 +251,7 @@ class AppSession(ApplicationSession):
                 self.log.warn("Processor failed to access NA server {server_id}, with error {e}",
                               server_id=rpc_calls['na'],e=e)
                 traceback.print_exc()
-                yield self.call(rpc_calls['user_msg'], {'info':{'error':
+                yield self.call(rpc_calls['user_msg'], {'info':{'error':\
                                         'Unable to contact NeuroArch server'}})
                 returnValue(None)
 
