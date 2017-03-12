@@ -156,6 +156,21 @@
                                         "caller":true
                                     },
                                     "cache":true,
+                                    "uri":"ffbo.gfx",
+                                    "allow":{
+                                        "subscribe":true,
+                                        "register":true,
+                                        "call":false,
+                                        "publish":false
+                                    },
+                                    "match":"prefix"
+                                },
+                                {
+                                    "disclose":{
+                                        "publisher":true,
+                                        "caller":true
+                                    },
+                                    "cache":true,
                                     "uri":"",
                                     "allow":{
                                         "subscribe":true,
