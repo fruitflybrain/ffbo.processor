@@ -495,7 +495,7 @@ class AppSession(ApplicationSession):
 
 
         @inlineCallbacks
-        def neuroarch_query(request):
+        def neuroarch_query(request, details=None):
             """
             Call the neuroarch_query module with a neuroarch-json object
             The request should have
@@ -504,11 +504,15 @@ class AppSession(ApplicationSession):
                 query:  neuroarcj json query object
             """
             try:
+                request['user'] = details.caller
+                user_details = yield self.call('ffbo.auth_server.get_user',details.caller)
+                if user_details: request['username'] = user_details['username']
+                self.log.info("neuroarch_query() accessed with request: {request}", request=request)
+            
                 progressive_result = {}
                 def on_progress(p):
                     progressive_result.update(p)
 
-                print request
                 result =  yield self.call('ffbo.na.query.'+str(request['server']), request, options=CallOptions(on_progress=on_progress))
                 self.log.info("na_query returned with result")
 
@@ -530,14 +534,26 @@ class AppSession(ApplicationSession):
                 returnValue(feedback)
 
 
-        yield self.register(neuroarch_query, 'ffbo.processor.neuroarch_query')
+        yield self.register(neuroarch_query, 'ffbo.processor.neuroarch_query', RegisterOptions(details_arg='details'))
         self.log.info("procedure ffbo.processor.neuroarch_query registered")
 
         @inlineCallbacks
-        def flycircuit_neuron_query(neuron):
+        def flycircuit_neuron_query(neuron, server, session):
             self.log.info("Fetch the fircircuit database for neuron: {neuron}", neuron=neuron)
             try:
                 res = self.fdb.parse_neuron(neuron)
+                na_query = {}
+                na_query['query'] = [{"action":{"method":{"query":{"name":[neuron]}}},"object":{"class":"Neuron"}}]
+                na_query['format'] = 'nx'
+                na_query['server'] = server
+                na_query['session'] = session
+                res_vfb = yield self.call('ffbo.na.query.'+str(server), na_query)
+                vfb_id = ''
+                if 'success' in res_vfb and 'data' in res_vfb['success'] and res_vfb['success']['data'] and 'nodes' in res_vfb['success']['data'] and \
+                   len(res_vfb['success']['data']['nodes'])>0:
+                    if 'vfb_id' in res_vfb['success']['data']['nodes'].values()[0]:
+                        vfb_id = res_vfb['success']['data']['nodes'].values()[0]['vfb_id']
+                res['vfb_id'] = vfb_id
             except Exception as e:
                 res = feedback_error(neuron,"Unable to fetch flycircuit database",e)
                 yield res
@@ -545,7 +561,7 @@ class AppSession(ApplicationSession):
 
         yield self.register(flycircuit_neuron_query, "ffbo.processor.fetch_flycircuit")
         self.log.info("procedure ffbo.processor.fetch_flycircuit registered")
-
+        
 
         @inlineCallbacks
         def neurokernel_query(request):
