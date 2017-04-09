@@ -8,6 +8,8 @@ from autobahn.twisted.wamp import ApplicationSession,  ApplicationRunner
 from autobahn.wamp.exception import ApplicationError
 from autobahn.wamp.types import RegisterOptions
 
+import autobahn
+
 import smtplib
 from email.mime.text import MIMEText
 
@@ -71,7 +73,7 @@ class AppSession(ApplicationSession):
         # Memory Management
         @inlineCallbacks
         def trigger_memory_management():
-            yield self.publish('ffbo.processor.memory_manager')
+            yield self.publish(six.u('ffbo.processor.memory_manager'))
             self.log.info('Memory Management ping: ffbo.processor.memory_manager')
 
 
@@ -174,7 +176,7 @@ class AppSession(ApplicationSession):
                 nlp_query:  string
             """
             request['user'] = details.caller
-            user_details = yield self.call('ffbo.auth_server.get_user',details.caller)
+            user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
             if user_details: request['username'] = user_details['username']
             feedback = []
             self.log.info("process_nlp_query() accessed with request: {request}", request=request)
@@ -186,9 +188,15 @@ class AppSession(ApplicationSession):
                     rpc_calls[stype] = "ffbo.%(s_type)s.query.%(s_id)s" % \
                             {'s_id':    request['servers'][stype],
                              's_type':  stype}
+                    if not (type(rpc_calls[stype]) == six.text_type): rpc_calls[stype] = six.u(rpc_calls[stype])
+                
                 rpc_calls['user_msg'] = "ffbo.ui.receive_msg.%(s_id)s" % \
                                         {'s_id': request['user']}
+                stype = 'user_msg'
+                if not (type(rpc_calls[stype]) == six.text_type): rpc_calls[stype] = six.u(rpc_calls[stype])
+                
             except Exception as e:
+                print e
                 self.log.warn("process_nlp_query() failed due to incomplete server list in {servers}", servers= str(request['servers']))
                 feedback =  feedback_error(request,"Server list not fully defined",e)
                 returnValue(feedback)
@@ -202,7 +210,7 @@ class AppSession(ApplicationSession):
                 language = "en"
                 if "language" in request:
                     language = request["language"]
-
+                
                 nlp_res =  yield self.call(rpc_calls['nlp'], request['nlp_query'],language)
                 self.log.info("process_nlp_query() accessed on NLP server {server_id} with result: {result}",
                           server_id=rpc_calls['nlp'],result=nlp_res)
@@ -254,7 +262,7 @@ class AppSession(ApplicationSession):
                                         'Unable to contact NeuroArch server'}})
                 returnValue(None)
 
-        yield self.register(process_nlp_query, 'ffbo.processor.nlp_to_visualise', RegisterOptions(details_arg='details'))
+        yield self.register(process_nlp_query, six.u('ffbo.processor.nlp_to_visualise'), RegisterOptions(details_arg='details'))
         self.log.debug("procedure process_nlp_query registered")
 
 
@@ -264,7 +272,7 @@ class AppSession(ApplicationSession):
 
             """
             request['user'] = details.caller
-            user_details = yield self.call('ffbo.auth_server.get_user',details.caller)
+            user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
             if user_details: request['username'] = user_details['username']
             feedback = []
             self.log.debug("process_nk_request() accessed with request: {request}", request=request)
@@ -278,7 +286,9 @@ class AppSession(ApplicationSession):
                 rpc_calls['nk'] = "ffbo.%(s_type)s.launch.%(s_id)s" % \
                                   {'s_id':    request['servers']['nk'],
                                    's_type':  'nk'}
-
+                for stype in ['na','nk']:
+                    if not (type(rpc_calls[stype]) == six.text_type): rpc_calls[stype] = six.u(rpc_call[stype])
+                
             except Exception as e:
                 self.log.warn("process_nk_request() failed due to incomplete server list in {servers}", servers= str(request['servers']))
                 feedback =  feedback_error(request,"Server list not fully defined",e)
@@ -317,7 +327,7 @@ class AppSession(ApplicationSession):
 
                 details.progress("Start execution in Neurokernel")
                 # Fprward result to the Front End
-                na_res["forward"] = "ffbo.gfx.receive_partial." + str(na_res['user'])
+                na_res["forward"] = six.u("ffbo.gfx.receive_partial." + str(na_res['user']))
                 nk_res =  yield self.call(rpc_calls['nk'], na_res, options=CallOptions(on_progress=on_progress))
 
                 # Did we use a progressive result
@@ -370,7 +380,7 @@ class AppSession(ApplicationSession):
             returnValue(vis_res)
 
 
-        yield self.register(process_nk_request, 'ffbo.processor.nk_execute', RegisterOptions(details_arg='details'))
+        yield self.register(process_nk_request, six.u('ffbo.processor.nk_execute'), RegisterOptions(details_arg='details'))
         self.log.debug("procedure process_nk_request registered")
 
 
@@ -392,7 +402,7 @@ class AppSession(ApplicationSession):
                 returnValue(False)
             returnValue(True)
 
-        yield self.register(log_feedback, 'ffbo.server.log_feedback',RegisterOptions(details_arg='details'))
+        yield self.register(log_feedback, six.u('ffbo.server.log_feedback'),RegisterOptions(details_arg='details'))
         self.log.debug("registered ffbo.server.log_feedback")
 
 
@@ -421,9 +431,9 @@ class AppSession(ApplicationSession):
                          if email_res is not None:
                              self.log.info("Tried to send out email... {msg}", msg=email_res)
                     del directory[stype][session_id]
-                    yield self.publish('ffbo.server.update', directory)
+                    yield self.publish(six.u('ffbo.server.update'), directory)
 
-        yield self.subscribe(on_session_leave, 'wamp.session.on_leave')
+        yield self.subscribe(on_session_leave, six.u('wamp.session.on_leave'))
         self.log.debug("subscribed to topic 'wamp.session.on_leave'")
 
 
@@ -440,10 +450,10 @@ class AppSession(ApplicationSession):
             directory[server_type][server_id] = {'name':server_name}
 
             # PUBLISH updated server list after a new server registration
-            yield self.publish('ffbo.server.update', directory)
+            yield self.publish(six.u('ffbo.server.update'), directory)
             returnValue(json.dumps({'server':directory}))
 
-        yield self.register(register_new_server, 'ffbo.server.register')
+        yield self.register(register_new_server, six.u('ffbo.server.register'))
         self.log.debug("procedure register_new_server registered")
 
 
@@ -464,7 +474,7 @@ class AppSession(ApplicationSession):
             try:
                 self.log.info("nlp_query() accessed on NLP server {server_id} with query: {query}",
                                       server_id=server_id,query=query)
-                nlp_res =  yield self.call("ffbo.nlp.query."+  str(server_id), query)
+                nlp_res =  yield self.call(six.u("ffbo.nlp.query."+  str(server_id)), query)
                 self.log.info("nlp_query() accessed on NLP server {server_id} with result: {result}",
                                       server_id=server_id,result=nlp_res)
 
@@ -489,7 +499,7 @@ class AppSession(ApplicationSession):
                 feedback = feedback_error(query,"NLP parsing could not parse string",e)
                 returnValue(feedback)
 
-        yield self.register(nlp_query, 'ffbo.processor.nlp_query')
+        yield self.register(nlp_query, six.u('ffbo.processor.nlp_query'))
         self.log.debug("procedure ffbo.processor.nlp_query registered")
 
 
@@ -504,7 +514,7 @@ class AppSession(ApplicationSession):
             """
             try:
                 request['user'] = details.caller
-                user_details = yield self.call('ffbo.auth_server.get_user',details.caller)
+                user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
                 if user_details: request['username'] = user_details['username']
                 self.log.info("neuroarch_query() accessed with request: {request}", request=request)
             
@@ -512,7 +522,7 @@ class AppSession(ApplicationSession):
                 def on_progress(p):
                     progressive_result.update(p)
 
-                result =  yield self.call('ffbo.na.query.'+str(request['server']), request, options=CallOptions(on_progress=on_progress))
+                result =  yield self.call(six.u('ffbo.na.query.'+str(request['server'])), request, options=CallOptions(on_progress=on_progress))
                 self.log.info("na_query returned with result")
 
                 if progressive_result:
@@ -533,7 +543,7 @@ class AppSession(ApplicationSession):
                 returnValue(feedback)
 
 
-        yield self.register(neuroarch_query, 'ffbo.processor.neuroarch_query', RegisterOptions(details_arg='details'))
+        yield self.register(neuroarch_query, six.u('ffbo.processor.neuroarch_query'), RegisterOptions(details_arg='details'))
         self.log.info("procedure ffbo.processor.neuroarch_query registered")
 
         @inlineCallbacks
@@ -546,7 +556,7 @@ class AppSession(ApplicationSession):
                 na_query['format'] = 'nx'
                 na_query['server'] = server
                 na_query['session'] = session
-                res_vfb = yield self.call('ffbo.na.query.'+str(server), na_query)
+                res_vfb = yield self.call(six.u('ffbo.na.query.'+str(server)), na_query)
                 vfb_id = ''
                 if 'success' in res_vfb and 'data' in res_vfb['success'] and res_vfb['success']['data'] and 'nodes' in res_vfb['success']['data'] and \
                    len(res_vfb['success']['data']['nodes'])>0:
@@ -558,7 +568,7 @@ class AppSession(ApplicationSession):
                 yield res
             returnValue(res)
 
-        yield self.register(flycircuit_neuron_query, "ffbo.processor.fetch_flycircuit")
+        yield self.register(flycircuit_neuron_query, six.u("ffbo.processor.fetch_flycircuit"))
         self.log.info("procedure ffbo.processor.fetch_flycircuit registered")
         
 
@@ -576,8 +586,7 @@ class AppSession(ApplicationSession):
                 def on_progress(p):
                     progressive_result.update(p)
 
-                print request
-                result =  yield self.call('ffbo.nk.launch.'+str(request['server']), request)
+                result =  yield self.call(six.u('ffbo.nk.launch.'+str(request['server'])), request)
                 self.log.info("nk_query returned with result")
 
                 if result is None:
@@ -603,7 +612,7 @@ class AppSession(ApplicationSession):
             self.log.debug("relay_server_information rpc called")
             return directory
 
-        yield self.register(relay_server_information, 'ffbo.processor.server_information')
+        yield self.register(relay_server_information, six.u('ffbo.processor.server_information'))
         self.log.debug("ffbo.processor.server_information registered")
 
 

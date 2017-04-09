@@ -24,6 +24,8 @@ import autobahn.wamp.auth as ath
 
 import copy
 
+import six
+
 class AppSession(ApplicationSession):
 
     log = Logger()
@@ -56,7 +58,7 @@ class AppSession(ApplicationSession):
             return auth_details
 
 
-        yield self.register(auth, 'ffbo.auth_server.auth')
+        yield self.register(auth, six.u('ffbo.auth_server.auth'))
         self.log.info("registered ffbo.auth_server.auth")
 
         def get_user(session):
@@ -64,7 +66,7 @@ class AppSession(ApplicationSession):
                 return session_user_map[session]
             return {}
 
-        yield self.register(get_user, 'ffbo.auth_server.get_user')
+        yield self.register(get_user, six.u('ffbo.auth_server.get_user'))
         self.log.info("registered ffbo.auth_server.get_user")
 
         def generate_password():
@@ -96,7 +98,7 @@ class AppSession(ApplicationSession):
             send_email(user_details, pw, username)
             return {"success": "Successfuly registered. Please check your email for your password."}
 
-        yield self.register(register_user, 'ffbo.auth_server.register_user')
+        yield self.register(register_user, six.u('ffbo.auth_server.register_user'))
         self.log.info("registered ffbo.auth_server.register_user")
 
         def send_email(user_details, pw, username):
@@ -138,13 +140,13 @@ class AppSession(ApplicationSession):
                 return False
             return True
 
-        yield self.register(user_exists, 'ffbo.auth_server.user_exists')
+        yield self.register(user_exists, six.u('ffbo.auth_server.user_exists'))
         self.log.info("registered ffbo.auth_server.user_exists")
 
         def get_auth_config():
             return auth_config
 
-        yield self.register(get_auth_config, 'ffbo.auth_server.get_auth_config')
+        yield self.register(get_auth_config, six.u('ffbo.auth_server.get_auth_config'))
         self.log.info("registered ffbo.auth_server.get_auth_config")
 
         def change_password():
