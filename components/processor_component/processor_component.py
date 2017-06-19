@@ -164,6 +164,91 @@ class AppSession(ApplicationSession):
                 }
             return info
 
+        
+        ##################
+        @inlineCallbacks # Progressive calls
+        def retrieve_by_id(request,details=None):
+            """
+                Process a nlp request, this request should have
+                user:       session_id
+                servers: {  nlp: session_id,
+                            na : session_id,
+                            vis: session_id
+                         }
+                task:  {key_type: string
+                        key: string
+                        }
+            """
+
+            request['user'] = details.caller
+
+            user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
+            
+            if user_details: request['username'] = user_details['username']
+            feedback = []
+
+            self.log.info("retrieve_neuron_by_id() accessed with request: {request}", request=request)
+            # Validate 3 each server is defined
+
+
+
+            #build up server calls
+           
+                                        
+            try:
+                rpc_calls = {}
+                for stype in ['na']:
+                    rpc_calls[stype] = "ffbo.%(s_type)s.retrieve_by_id.%(s_id)s" % \
+                           {'s_id':    request['servers'][stype],
+                            's_type':  stype}
+                            
+                    if not (type(rpc_calls[stype]) == six.text_type): rpc_calls[stype] = six.u(rpc_calls[stype])
+                    
+                rpc_calls['user_msg'] = six.u("ffbo.ui.receive_msg.%(s_id)s" % \
+                                            {'s_id': request['user']})
+                                            
+                stype = 'user_msg'
+                if not (type(rpc_calls[stype]) == six.text_type): rpc_calls[stype] = six.u(rpc_calls[stype])
+            except Exception as e:
+                self.log.warn("retrieve_neuron_by_id() failed due to incomplete server list in {servers}", servers= str(request['servers']))
+                feedback =  feedback_error(request,"Server list not fully defined",e)
+                returnValue(feedback)
+
+
+            try:
+                task = {
+                        'user_msg' : rpc_calls['user_msg'],
+                        'user' : request['user'],
+                        'key_type'  : request['task']['key_type'],
+                        'key'       : request['task']['key']
+                        }
+                
+                na_res = yield self.call(rpc_calls['na'], task)
+                
+                if not na_res:
+                    yield self.call(rpc_calls['user_msg'], {'info':{'error':\
+                                        'Failed to execute query on Neuroarch'}})
+                    returnValue(None)
+                else:
+                    msg = {'info':{'success':'Finished fetching all results from NeuroArch'}}
+                    self.call(rpc_calls['user_msg'], msg)
+                    returnValue(na_res)
+
+            except ApplicationError as e:
+                self.log.warn("Processor failed to access NA server {server_id}, with error {e}",
+                              server_id=rpc_calls['na'],e=e)
+                traceback.print_exc()
+                yield self.call(rpc_calls['user_msg'], {'info':{'error':\
+                                        'Unable to contact NeuroArch server'}})
+                returnValue(None)
+
+        yield self.register(retrieve_by_id, 'ffbo.processor.request_by_id', RegisterOptions(details_arg='details'))
+        self.log.debug("procedure request by id registered")
+
+
+
+
+
         @inlineCallbacks # Progressive calls
         def process_nlp_query(request,details=None):
             """
