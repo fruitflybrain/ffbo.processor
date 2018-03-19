@@ -104,7 +104,8 @@
             },
             "realms":[
                 {
-                    "roles":[
+		    "name": "realm1",
+		    "roles":[
                         {
                             "name":"anonymous",
                             "permissions":[
@@ -343,7 +344,28 @@
                                 "limit":1000,
                                 "uri":"ffbo.na.query_to_processor",
                                 "match":"prefix"
-                            }
+                            },
+			    {
+				"uri": "ffbo.na.get_data",
+				"match": "prefix",
+				"limit": 1000
+			    },
+			    {
+				"uri": "ffbo.na.create_tag",
+				"match": "prefix",
+				"limit": 1000
+			    },
+			    {
+				"uri": "ffbo.na.retrieve_tag",
+				"match": "prefix",
+				"limit": 1000
+			    },
+			    {
+				"uri": "ffbo.processor.fetch_flycircuit",
+				"match": "prefix",
+				"limit": 1000
+			    }
+
                         ],
                         "type":"memory"
                     }
