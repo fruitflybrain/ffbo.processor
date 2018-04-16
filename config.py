@@ -21,6 +21,7 @@ add_ssl = parser.add_argument_group('ssl', 'arguments for setting up ssl connect
 add_ssl.add_argument('--ssl', dest='ssl', action='store_true', help='enable ssl connection; ssl is disabled by default')
 add_ssl.add_argument("--ssl-cert", dest='ssl_cert', default="", help="path to the certificate file")
 add_ssl.add_argument("--ssl-key", dest='ssl_key', default="", help="path to the key file")
+add_ssl.add_argument("--chain-cert", dest='chain_cert', default="", help="path to the chain certificate file")
 parser.set_defaults(ssl=False)
 
 add_sandbox = parser.add_argument_group('sandbox', 'arguments for setting up sandbox')
@@ -48,6 +49,7 @@ if args.ssl:
     for i in xrange(len(default_config["workers"][0]["transports"])):
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["certificate"] = args.ssl_cert
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["key"] = args.ssl_key
+        default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["chain_certificates"][0] = args.chain_cert
 else:
     for i in xrange(len(default_config["workers"][0]["transports"])):
         del default_config["workers"][0]["transports"][i]["endpoint"]["tls"]
