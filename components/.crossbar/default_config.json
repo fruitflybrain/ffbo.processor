@@ -332,11 +332,6 @@
                             },
                             {
                                 "limit":1000,
-                                "uri":"ffbo.na.query",
-                                "match":"prefix"
-                            },
-                            {
-                                "limit":1000,
                                 "uri":"ffbo.nk",
                                 "match":"prefix"
                             },
@@ -346,17 +341,7 @@
                                 "match":"prefix"
                             },
 			    {
-				"uri": "ffbo.na.get_data",
-				"match": "prefix",
-				"limit": 1000
-			    },
-			    {
-				"uri": "ffbo.na.create_tag",
-				"match": "prefix",
-				"limit": 1000
-			    },
-			    {
-				"uri": "ffbo.na.retrieve_tag",
+				"uri": "ffbo.na",
 				"match": "prefix",
 				"limit": 1000
 			    },
