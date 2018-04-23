@@ -2,8 +2,8 @@ import requests, os
 import thread
 from bs4 import BeautifulSoup
 
-prefix_img_local = "../web/lib/img/flycircuit/"
-prefix_img_to_frontend = "/lib/img/flycircuit/"
+prefix_img_local = "/ffbo.neuronlp/img/flycircuit/"
+prefix_img_to_frontend = "/img/flycircuit/"
 
 def clean(s):
     return ' '.join(s.split())
