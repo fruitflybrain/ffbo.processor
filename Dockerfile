@@ -6,6 +6,7 @@ FROM python:2
 MAINTAINER Adam Tomkins <a.tomkins@sheffield.ac.uk>
 
 ADD . /ffbo.processor
+#RUN git clone https://github.com/fruitflybrain/ffbo.processor /ffbo.processor
 RUN git clone https://github.com/fruitflybrain/ffbo.neuronlp /ffbo.neuronlp
 RUN git clone https://github.com/fruitflybrain/ffbo.lib /ffbo.neuronlp/lib
 RUN git clone https://github.com/fruitflybrain/ffbo.neurogfx /ffbo.neurogfx
