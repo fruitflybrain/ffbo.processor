@@ -43,7 +43,7 @@ Note that the container can be both built and run with the following command:
 
     docker-compose up
 
-## Manual Execution
+### Manual Execution
 
 Downloading and building the repository and image are accomplished the same as in the above section. Accessing the bash interface for the container can be accomplished with:
 
