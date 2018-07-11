@@ -48,5 +48,5 @@ RUN apt-get install -y sendmail
 #CMD ["cat","/ffbo.processor/components/.crossbar/docker_config.json"]
 #CMD ["python","/ffbo.processor/config.py","--nlp-path","/ffbo.neuronlp","--gfx-path","/ffbo.neurogfx","--path", "/ffbo.processor/components/.crossbar/","--filename","docker_config.json"]
 #CMD ["sh","ffbo.processor/components/run_server.sh","docker_config.json"]
-CMD python ffbo.processor/config.py --nlp-path ffbo.neuronlp --gfx-path ffbo.neurogfx --path ffbo.processor/components/.crossbar/ --filename docker_config.json
+RUN python ffbo.processor/config.py --nlp-path ffbo.neuronlp --gfx-path ffbo.neurogfx --path ffbo.processor/components/.crossbar/ --filename docker_config.json
 CMD sh ffbo.processor/components/run_server.sh docker_config.json
