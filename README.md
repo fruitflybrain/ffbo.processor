@@ -15,9 +15,7 @@ Currently this main package contains three distinct elements, in time this will 
 
 ## Installation and Execution
 
-This project requires crossbario[twisted]. This service can also be launched by building the docker and launching:
-
-	docker run -it ffbo/processor crossbar start
+Options for installing and running ffbo.processor are explained below.
 
 ### Docker Hub
 
