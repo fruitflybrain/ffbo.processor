@@ -29,11 +29,11 @@ This project requires crossbario[twisted]. This service can also be launched by 
 ### Docker Hub
 
 Installing via the Docker Hub repository (https://hub.docker.com/r/jonmarty/ffbo.processor) is recommended for non-developers. The image is installed directly onto your local Docker daemon, from which you can run it in a container. Installation is as follows:
-'''
+'''sh
 docker pull jonmarty/ffbo.processor
 '''
 Once the image is installed, you can run it in a container:
-'''
+'''sh
 docker run --net ffbonet --name ffbo.processor jonmarty/ffbo.processor
 '''
 
