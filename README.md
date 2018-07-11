@@ -13,14 +13,6 @@ Currently this main package contains three distinct elements, in time this will 
 * A web server
 * A processor server
 
-## Execution
-
-As the main router, this should be started with the following command in the /processor_component/processor_component/ directory:
-
-	crossbar start
-	
-This will launch the router, processor and web interface on port 8080 or the local server. Details of the crossbar config can be seen in .crossbar/config.json
-
 ## Installation and Execution
 
 This project requires crossbario[twisted]. This service can also be launched by building the docker and launching:
@@ -68,3 +60,4 @@ or
     cd ffbo.processor/components
     crossbar start --config docker_config.json
 
+This will launch the router, processor and web interface on port 8080 or the local server. Details of the crossbar config can be seen in .crossbar/config.json
