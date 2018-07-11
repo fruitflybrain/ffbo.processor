@@ -44,11 +44,11 @@ Installing via the Github repository (https://github.com/jonmarty/ffbo.processor
 git clone https://github.com/jonmarty/ffbo.processor
 '''
 Building and running the repository is simplified with Docker Compose, which stores the configuration for a service (such as network and name for the container and the Dockerfile to build from) in a docker-compose.yml file, simplifying the command-line call. Building and running the Docker image can be accomplished with:
-'''
-docker-compose build <service-name>
-docker-compose run <service-name>
-'''
+
+    docker-compose build <service-name>
+    docker-compose run <service-name>
+
 Note that the container can be both built and run with the following command:
-'''
-docker-compose up <service-name>
-'''
+
+    docker-compose up <service-name>
+
