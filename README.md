@@ -24,25 +24,26 @@ Currently this main package contains three distinct elements, in time this will 
 ## Installation
 
 This project requires crossbario[twisted]. This service can also be launched by building the docker and launching:
+
 	docker run -it ffbo/processor crossbar start
 
 ### Docker Hub
 
 Installing via the Docker Hub repository (https://hub.docker.com/r/jonmarty/ffbo.processor) is recommended for non-developers. The image is installed directly onto your local Docker daemon, from which you can run it in a container. Installation is as follows:
-'''sh
-docker pull jonmarty/ffbo.processor
-'''
+
+    docker pull jonmarty/ffbo.processor
+
 Once the image is installed, you can run it in a container:
-'''sh
-docker run --net ffbonet --name ffbo.processor jonmarty/ffbo.processor
-'''
+
+    docker run --net ffbonet --name ffbo.processor jonmarty/ffbo.processor
+
 
 ### Github with Docker Compose
 
 Installing via the Github repository (https://github.com/jonmarty/ffbo.processor) is recommended for developers.The code is downloaded as follows:
-'''
-git clone https://github.com/jonmarty/ffbo.processor
-'''
+
+    git clone https://github.com/jonmarty/ffbo.processor
+
 Building and running the repository is simplified with Docker Compose, which stores the configuration for a service (such as network and name for the container and the Dockerfile to build from) in a docker-compose.yml file, simplifying the command-line call. Building and running the Docker image can be accomplished with:
 
     docker-compose build <service-name>
