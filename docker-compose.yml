@@ -3,8 +3,13 @@ services:
     ffbo.processor:
         container_name: ffbo.processor
         ports: ["127.0.0.1:8080:8080", "127.0.0.1:8081:8081", "127.0.0.1:8082:8082"]
-        network_mode: "host" 
+        tty: true
+        networks:
+            - ffbonet 
         build:
             context: .
             dockerfile: ./Dockerfile
         image: ffbo/processor:develop
+networks:
+    ffbonet:
+        external: true
