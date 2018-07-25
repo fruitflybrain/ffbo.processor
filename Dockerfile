@@ -32,13 +32,13 @@ RUN pip install pandas
 RUN pip install beautifulsoup4
 RUN pip install tinydb
 RUN pip install simplejson
+RUN pip install configparser
 
 # Install SMTP mail server
 RUN apt-get update
 RUN apt-get install -y sendmail
 
-# Create config file
-RUN python ffbo.processor/config.py --nlp-path /ffbo.neuronlp --gfx-path /ffbo.neurogfx --path ffbo.processor/components/.crossbar/ --filename docker_config.json
+SHELL ["bash", "-c"]
 
 # Run server
 CMD sh ffbo.processor/components/run_server.sh docker_config.json
