@@ -1,6 +1,6 @@
 # FFBO Processor Component
+[![Twitter Follow](https://img.shields.io/twitter/follow/flybrainobs.svg?style=social&label=Follow)](https://twitter.com/flybrainobs) ![license](https://img.shields.io/github/license/jonmarty/ffbo.processor.svg?style=flat-square) ![GitHub last commit](https://img.shields.io/github/last-commit/jonmarty/ffbo.processor.svg?style=flat-square) [![Docker Build Status](https://img.shields.io/docker/build/jonmarty/ffbo.processor.svg?style=flat-square)](https://hub.docker.com/r/jonmarty/ffbo.processor)
 ## Overview
-
 This package contains the main component of the [FFBO architecture](http://fruitflybrain.org/), the Processor. The processor uses the [NeuroNLP](http://github.com/jonmarty/ffbo.nlp_component) and [NeuroArch](http://github.com/jonmarty/ffbo.neuroarch_component) database components as backends for processing text queries and accessing neurophysiological data. It can additionally be attached to [FFBOLab](http://github.com/jonmarty/ffbolab) to improve processing speed by leveraging local computing resources (default is to use FFBO's servers). FFBOLab provides a GUI interface across ports 8081 and 8082 on the host machine's localhost. Port 8081 serves the NeuroNLP interface, while port 8082 serves the NeuroGFX interface.
 
 This package acts as multiple important parts of the FFBO web infrastruture, it contains:
