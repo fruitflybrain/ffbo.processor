@@ -2,12 +2,6 @@
 FROM python:2
 MAINTAINER Jonathan Marty <jonathan.n.marty@gmail.com>
 
-# Expose ports
-EXPOSE 8081 8081
-EXPOSE 8082 8082
-# This is the port for the "sandbox" feature, which is not implemented yet
-#EXPOSE 8083 8083
-
 # Set up directories
 ADD . /ffbo.processor
 RUN git clone --single-branch -b local_build https://github.com/fruitflybrain/ffbo.neuronlp /ffbo.neuronlp
@@ -27,7 +21,7 @@ ENV CBREALM realm1
 RUN pip install -U pip && pip install autobahn[twisted] && pip install crossbar==17.12.1
 
 # install ffbo.processor dependecies
-RUN pip install numpy
+RUN pip install numpy==1.14.5
 RUN pip install pandas
 RUN pip install beautifulsoup4
 RUN pip install tinydb
