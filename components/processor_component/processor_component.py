@@ -606,17 +606,39 @@ class AppSession(ApplicationSession):
 
 
 if __name__ == '__main__':
-
+    
+    from configparser import ConfigParser
+    
+    # Grab configuration from file
+    root = os.path.expanduser("/")
+    home = os.path.expanduser("~")
+    filepath = os.path.dirname(os.path.abspath(__file__))
+    config_files = []
+    config_files.append(os.path.join(home, "config", "ffbo.processor.ini"))
+    config_files.append(os.path.join(root, "config", "ffbo.processor.ini"))
+    config_files.append(os.path.join(home, "config", "config.ini"))
+    config_files.append(os.path.join(root, "config", "config.ini"))
+    config_files.append(os.path.join(filepath, "config.ini"))
+    config = ConfigParser()
+    configured = False
+    for config_file in config_files:
+        if os.path.exists(config_file):
+            config.read(config_file)
+            configured = True
+            break
+    if not configured:
+        raise Exception("No config file exists for this component")
+    
     # Crossbar.io connection configuration
-    url = os.environ.get('CBURL', u'ws://localhost:8080/ws')
-    realm = os.environ.get('CBREALM', u'realm1')
-
+    url = "ws://crossbar:8080/ws"
+    realm = config["SERVER"]["realm"]
+    
     # parse command line parameters
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug output.')
     parser.add_argument('--url', dest='url', type=six.text_type, default=url, help='The router URL (default: "ws://localhost:8080/ws").')
     parser.add_argument('--realm', dest='realm', type=six.text_type, default=realm, help='The realm to join (default: "realm1").')
-
+    
     args = parser.parse_args()
 
     # start logging

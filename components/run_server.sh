@@ -1,4 +1,4 @@
-python /ffbo.processor/config.py --nlp-path /ffbo.neuronlp --gfx-path /ffbo.neurogfx --path /ffbo.processor/components/.crossbar/ --filename docker_config.json
+python /ffbo.processor/config.py --path /ffbo.processor/components/.crossbar/ --filename docker_config.json
 
 BASEDIR=$(dirname "$0")
 cd $BASEDIR
