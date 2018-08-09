@@ -24,11 +24,10 @@ for config_file in config_files:
 if not configured:
     raise Exception("No config file exists for this component")
 
-
 parser = argparse.ArgumentParser('config.py',description="Script for setting up Crossbar configuration file")
 
-parser.add_argument("--filename", default=config["GLOBAL"]["filename"], type=str, help="directory to place the generated configuration file")
-parser.add_argument("--path", default=config["GLOBAL"]["path"], type=str, help="directory to place the generated configuration file")
+parser.add_argument("--filename", default=config["CROSSBAR"]["configfile"], type=str, help="directory to place the generated configuration file")
+parser.add_argument("--path", default=config["CROSSBAR"]["path"], type=str, help="directory to place the generated configuration file")
 
 add_nlp = parser.add_argument_group('nlp', 'arguments for setting up NeuroNLP')
 add_nlp.add_argument("--nlp-path", dest='nlp_path', default=config["NLP"]["path"], type=str, help="path to the NeuroNLP folder")
@@ -41,10 +40,10 @@ add_gfx.add_argument("--gfx-port", dest='gfx_port', default=int(config["GFX"]["p
 
 add_ssl = parser.add_argument_group('ssl', 'arguments for setting up ssl connection')
 add_ssl.add_argument('--ssl', dest='ssl', action='store_true', help='enable ssl connection; ssl is disabled by default')
-add_ssl.add_argument("--ssl-cert", dest='ssl_cert', default=config["SSL"]["cert"], help="path to the certificate file")
-add_ssl.add_argument("--ssl-key", dest='ssl_key', default=config["SSL"]["key"], help="path to the key file")
-add_ssl.add_argument("--chain-cert", dest='chain_cert', default=config["SSL"]["chain-cert"], help="path to the chain certificate file")
-parser.set_defaults(ssl=eval(config["SSL"]["ssl"]))
+add_ssl.add_argument("--ssl-cert", dest='ssl_cert', default=config["AUTH"]["cert"], help="path to the certificate file")
+add_ssl.add_argument("--ssl-key", dest='ssl_key', default=config["AUTH"]["key"], help="path to the key file")
+add_ssl.add_argument("--chain-cert", dest='chain_cert', default=config["AUTH"]["chain-cert"], help="path to the chain certificate file")
+parser.set_defaults(ssl=eval(config["AUTH"]["ssl"]))
 
 add_sandbox = parser.add_argument_group('sandbox', 'arguments for setting up sandbox')
 add_sandbox.add_argument('--no-sandbox', dest='sand_box', action='store_false', help='disable sandbox directory; sandbox is enabled by default')

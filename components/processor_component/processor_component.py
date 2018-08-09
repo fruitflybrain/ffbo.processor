@@ -629,6 +629,21 @@ if __name__ == '__main__':
     if not configured:
         raise Exception("No config file exists for this component")
     
+    # Create proper address to serve content from based on config file
+    ssl = eval(config["AUTH"]["ssl"])
+    websockets = "wss" if ssl else "ws"
+    ip = config["SERVER"]["ip"]
+    port = config["NLP"]["port"]
+    processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
+    
+    # Replace proper address into js file
+    jsin = open("/neuronlp/js/NeuroNLP.js", "r").read()
+    jsout = jsin.replace("ws://ffbo.processor:8081/ws", processor_url)
+    jsfile = open("/neuronlp/js/NeuroNLP.js", "w")
+    jsfile.write(jsout)
+    jsfile.close()
+    
+    
     # Crossbar.io connection configuration
     url = "ws://crossbar:8080/ws"
     realm = config["SERVER"]["realm"]
