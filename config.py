@@ -24,6 +24,21 @@ for config_file in config_files:
 if not configured:
     raise Exception("No config file exists for this component")
 
+# Create proper address to serve content from based on config file
+ssl = eval(config["AUTH"]["ssl"])
+websockets = "wss" if ssl else "ws"
+ip = "localhost"
+#ip = config["SERVER"]["ip"]
+port = config["NLP"]["port"]
+processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
+
+# Replace proper address into js file
+jsin = open("/ffbo.neuronlp/js/NeuroNLP.js", "r").read()
+jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
+jsfile = open("/ffbo.neuronlp/js/NeuroNLP.js", "w")
+jsfile.write(jsout)
+jsfile.close()
+
 parser = argparse.ArgumentParser('config.py',description="Script for setting up Crossbar configuration file")
 
 parser.add_argument("--filename", default=config["CROSSBAR"]["configfile"], type=str, help="directory to place the generated configuration file")
