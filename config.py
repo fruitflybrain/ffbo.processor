@@ -27,9 +27,8 @@ if not configured:
 # Create proper address to serve content from based on config file
 ssl = eval(config["AUTH"]["ssl"])
 websockets = "wss" if ssl else "ws"
-ip = "localhost"
-#ip = config["SERVER"]["ip"]
-port = config["NLP"]["port"]
+ip = config["SERVER"]["ip"]
+port = config["NLP"]["expose-port"]
 processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
 
 # Replace proper address into js file
