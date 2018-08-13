@@ -38,6 +38,57 @@ jsfile = open("/ffbo.neuronlp/js/NeuroNLP.js", "w")
 jsfile.write(jsout)
 jsfile.close()
 
+from autobahn.wamp.auth import derive_key
+
+# Replace user_data.json
+userdata = eval(open("/ffbo.processor/components/processor_component/data/user_data.json", "r").read())
+username = config["USER"]["user"]
+salt = config["USER"]["salt"]
+secret = derive_key(secret = config["USER"]["secret"], salt = config["USER"]["salt"], iterations = int(userdata["_default"]["1"]["auth_details"]["iterations"]), keylen = int(userdata["_default"]["1"]["auth_details"]["keylen"]))
+userstr = """
+{
+    "_default": {
+        "1": {
+            "username": "%(username)s",
+            "user_details": {
+                "lname": "",
+                "position": "",
+                "email": "",
+                "fname": "",
+                "affiliation": ""
+            },
+            "auth_details": {
+                "role": "components",
+                "secret": "%(secret)s",
+                "salt": "%(salt)s",
+                "iterations": 5000,
+                "keylen": 32
+            }
+        },
+        "2": {
+            "username": "guest",
+            "user_details": {
+                "lname": "",
+                "position": "",
+                "email": "",
+                "fname": "Anonymous",
+                "affiliation": ""
+            },
+            "auth_details": {
+                "role": "user",
+                "secret": "Y/w6jYBIOLM48hEKn9zRLx9gZCYwwrFW7K/ELtWzVT8=",
+                "salt": "guestsalt",
+                "iterations": 5000,
+                "keylen": 32
+            }
+        }
+    }
+}""" % {"username":username, "secret":secret, "salt":salt}
+
+userfile = open("/ffbo.processor/components/processor_component/data/user_data.json", "w")
+userfile.write(userstr)
+userfile.close()
+
 parser = argparse.ArgumentParser('config.py',description="Script for setting up Crossbar configuration file")
 
 parser.add_argument("--filename", default=config["CROSSBAR"]["configfile"], type=str, help="directory to place the generated configuration file")

@@ -545,7 +545,7 @@ class AppSession(ApplicationSession):
 
         @inlineCallbacks
         def flycircuit_neuron_query(neuron, details=None):
-            self.log.info("Fetch the fircircuit database for neuron: {neuron}", neuron=neuron)
+            self.log.info("Fetch the flycircuit database for neuron: {neuron}", neuron=neuron)
             try:
                 res = self.fdb.parse_neuron(neuron)
             except Exception as e:
