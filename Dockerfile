@@ -38,4 +38,4 @@ WORKDIR /ffbo.processor/components
 SHELL ["bash", "-c"]
 
 # Run server
-CMD sh ffbo.processor/components/run_server.sh docker_config.json
+CMD sh run_server.sh docker_config.json
