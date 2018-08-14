@@ -1,5 +1,3 @@
-# should only be run under its own filepath
-
 import os,sys
 import argparse
 import simplejson as json
