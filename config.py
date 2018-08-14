@@ -59,7 +59,7 @@ userdata["_default"]["1"]["auth_details"]["salt"] = salt
 userdata["_default"]["1"]["username"] = username
 
 with open("/ffbo.processor/components/processor_component/data/user_data.json", "w") as f:
-    json.dump(userdata, indent=4 * ' ', separators=(',',':'))
+    json.dump(userdata, f, indent=4 * ' ', separators=(',',':'))
 
 parser = argparse.ArgumentParser('config.py',description="Script for setting up Crossbar configuration file")
 
