@@ -33,6 +33,8 @@ RUN pip install configparser
 RUN apt-get update
 RUN apt-get install -y sendmail
 
+WORKDIR /ffbo.processor/components
+
 SHELL ["bash", "-c"]
 
 # Run server
