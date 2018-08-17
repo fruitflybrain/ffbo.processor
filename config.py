@@ -32,7 +32,7 @@ if not configured:
 ssl = eval(config["AUTH"]["ssl"])
 websockets = "wss" if ssl else "ws"
 if "ip" in config["SERVER"]:
-    ip = config["SERVER"]
+    ip = config["SERVER"]["ip"]
 else:
     ip = "localhost"
 port = config["NLP"]["expose-port"]
