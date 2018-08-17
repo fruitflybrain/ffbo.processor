@@ -1,7 +1,7 @@
 # FFBO Processor Component
-[![Twitter Follow](https://img.shields.io/twitter/follow/flybrainobs.svg?style=social&label=Follow)](https://twitter.com/flybrainobs) ![license](https://img.shields.io/github/license/jonmarty/ffbo.processor.svg?style=flat-square) ![GitHub last commit](https://img.shields.io/github/last-commit/jonmarty/ffbo.processor.svg?style=flat-square) [![Docker Build Status](https://img.shields.io/docker/build/jonmarty/ffbo.processor.svg?style=flat-square)](https://hub.docker.com/r/jonmarty/ffbo.processor)
+[![Twitter Follow](https://img.shields.io/twitter/follow/flybrainobs.svg?style=social&label=Follow)](https://twitter.com/flybrainobs) ![license](https://img.shields.io/github/license/fruitflybrain/ffbo.processor.svg?style=flat-square) ![GitHub last commit](https://img.shields.io/github/last-commit/fruitflybrain/ffbo.processor.svg?style=flat-square) [![Docker Build Status](https://img.shields.io/docker/build/fruitflybrain/ffbo.processor.svg?style=flat-square)](https://hub.docker.com/r/fruitflybrain/ffbo.processor)
 ## Overview
-This package contains the main component of the [FFBO architecture](http://fruitflybrain.org/), the Processor. The processor uses the [NeuroNLP](http://github.com/jonmarty/ffbo.nlp_component) and [NeuroArch](http://github.com/jonmarty/ffbo.neuroarch_component) database components as backends for processing text queries and accessing neurophysiological data. It can additionally be attached to [FFBOLab](http://github.com/jonmarty/ffbolab) to improve processing speed by leveraging local computing resources (default is to use FFBO's servers). FFBOLab provides a GUI interface across ports 8081 and 8082 on the host machine's localhost. Port 8081 serves the NeuroNLP interface, while port 8082 serves the NeuroGFX interface.
+This package contains the main component of the [FFBO architecture](http://fruitflybrain.org/), the Processor. The processor uses the [NeuroNLP](http://github.com/fruitflybrain/ffbo.nlp_component) and [NeuroArch](http://github.com/fruitflybrain/ffbo.neuroarch_component) database components as backends for processing text queries and accessing neurophysiological data. It can additionally be attached to [FFBOLab](http://github.com/fruitflybrain/ffbolab) to improve processing speed by leveraging local computing resources (default is to use FFBO's servers). FFBOLab provides a GUI interface across ports 8081 and 8082 on the host machine's localhost. Port 8081 serves the NeuroNLP interface, while port 8082 serves the NeuroGFX interface.
 
 This package acts as multiple important parts of the FFBO web infrastruture, it contains:
 * The Crossbar WAMP router
@@ -34,20 +34,20 @@ Please note that the 'bridge' driver provides a network that is limited to the h
 
 ### Docker Hub
 
-Installing via the [Docker Hub](https://hub.docker.com/r/jonmarty/ffbo.processor) repository is recommended for non-developers. The image is installed directly onto your local Docker daemon, from which you can run it in a container. Installation is as follows:
+Installing via the [Docker Hub](https://hub.docker.com/r/fruitflybrain/ffbo.processor) repository is recommended for non-developers. The image is installed directly onto your local Docker daemon, from which you can run it in a container. Installation is as follows:
 
-    docker pull jonmarty/ffbo.processor
+    docker pull fruitflybrain/ffbo.processor
 
 Once the image is installed, you can run it in a container:
 
-    docker run -p 8081:8081 -p 8082:8082 -t --net ffbonet --name ffbo.processor jonmarty/ffbo.processor
+    docker run -p 8081:8081 -p 8082:8082 -t --net ffbonet --name ffbo.processor fruitflybrain/ffbo.processor
 
 
 ### Github with Docker Compose
 
-Installing via the [Github](https://github.com/jonmarty/ffbo.processor) repository is recommended for developers.The code is downloaded as follows:
+Installing via the [Github](https://github.com/fruitflybrain/ffbo.processor) repository is recommended for developers.The code is downloaded as follows:
 
-    git clone https://github.com/jonmarty/ffbo.processor
+    git clone https://github.com/fruitflybrain/ffbo.processor
 
 Building and running the repository is simplified with Docker Compose, which stores the configuration for a service (such as network and name for the container and the Dockerfile to build from) in a docker-compose.yml file, simplifying the command-line call. Building and running the Docker image can be accomplished with:
 
