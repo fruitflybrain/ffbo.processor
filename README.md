@@ -1,4 +1,4 @@
-# FFBO Processor Component
+# FFBO Processor
 [![Twitter Follow](https://img.shields.io/twitter/follow/flybrainobs.svg?style=social&label=Follow)](https://twitter.com/flybrainobs) ![license](https://img.shields.io/github/license/fruitflybrain/ffbo.processor.svg?style=flat-square) ![GitHub last commit](https://img.shields.io/github/last-commit/fruitflybrain/ffbo.processor.svg?style=flat-square) [![Docker Build Status](https://img.shields.io/docker/build/fruitflybrain/ffbo.processor.svg?style=flat-square)](https://hub.docker.com/r/fruitflybrain/ffbo.processor)
 ## Overview
 This package contains the processor in the backend of the system architecture of the [Fruit Fly Brain Observatory](http://fruitflybrain.org/) (FFBO).
