@@ -50,7 +50,6 @@ class AppSession(ApplicationSession):
         directory = {
             'nlp':{},
             'na' :{},
-            'na_model' :{},
             'nk': {}
         }
 
@@ -270,7 +269,7 @@ class AppSession(ApplicationSession):
                 
             """
             request['user'] = details.caller
-            user_details = yield self.call('ffbo.auth_server.get_user',details.caller)
+            user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
             if user_details: request['username'] = user_details['username']
             feedback = []
             self.log.debug("process_nk_request() accessed with request: {request}", request=request)
@@ -278,12 +277,12 @@ class AppSession(ApplicationSession):
             try:
                 #build up server calls
                 rpc_calls = {}
-                rpc_calls['na_model'] = six.u("ffbo.%(s_type)s.query.%(s_id)s" % \
-                                              {'s_id':    request['servers']['na_model'],
-                                               's_type':  'na'})
-                rpc_calls['nk'] = six.u("ffbo.%(s_type)s.launch.%(s_id)s" % \
+                rpc_calls['na'] = "ffbo.%(s_type)s.query.%(s_id)s" % \
+                                              {'s_id':    request['servers']['na'],
+                                               's_type':  'na'}
+                rpc_calls['nk'] = "ffbo.%(s_type)s.launch.%(s_id)s" % \
                                         {'s_id':    request['servers']['nk'],
-                                         's_type':  'nk'})
+                                         's_type':  'nk'}
 
             except Exception as e:
                 self.log.warn("process_nk_request() failed due to incomplete server list in {servers}", servers= str(request['servers']))
@@ -296,12 +295,12 @@ class AppSession(ApplicationSession):
                 na_task = {'user': request['user'],
                            'command': {"retrieve":{"state":0}},
                            'format': "nk"}
-                self.log.info("process_nk_request() accessed on NA_MODEL server {server_id} with query: {query}",
-                                      server_id=rpc_calls['na_model'], query=na_task)
+                self.log.info("process_nk_request() accessed on NA server {server_id} with query: {query}",
+                                      server_id=rpc_calls['na'], query=na_task)
 
-                na_res =  yield self.call(rpc_calls['na_model'], na_task)
+                na_res =  yield self.call(rpc_calls['na'], na_task)
                 self.log.info("process_nk_request() accessed on NA server {server_id} with result: {result}",
-                              server_id=rpc_calls['na_model'],result=na_res)
+                              server_id=rpc_calls['na'],result=na_res)
 
             except ApplicationError as e:
                 self.log.warn("Processor failed to access NLP server {server_id}, with error {e}",
@@ -545,7 +544,7 @@ class AppSession(ApplicationSession):
 
         @inlineCallbacks
         def flycircuit_neuron_query(neuron, details=None):
-            self.log.info("Fetch the fircircuit database for neuron: {neuron}", neuron=neuron)
+            self.log.info("Fetch the flycircuit database for neuron: {neuron}", neuron=neuron)
             try:
                 res = self.fdb.parse_neuron(neuron)
             except Exception as e:
@@ -606,17 +605,39 @@ class AppSession(ApplicationSession):
 
 
 if __name__ == '__main__':
-
+    
+    from configparser import ConfigParser
+    
+    # Grab configuration from file
+    root = os.path.expanduser("/")
+    home = os.path.expanduser("~")
+    filepath = os.path.dirname(os.path.abspath(__file__))
+    config_files = []
+    config_files.append(os.path.join(home, "config", "ffbo.processor.ini"))
+    config_files.append(os.path.join(root, "config", "ffbo.processor.ini"))
+    config_files.append(os.path.join(home, "config", "config.ini"))
+    config_files.append(os.path.join(root, "config", "config.ini"))
+    config_files.append(os.path.join(filepath, "config.ini"))
+    config = ConfigParser()
+    configured = False
+    for config_file in config_files:
+        if os.path.exists(config_file):
+            config.read(config_file)
+            configured = True
+            break
+    if not configured:
+        raise Exception("No config file exists for this component")
+    
     # Crossbar.io connection configuration
-    url = os.environ.get('CBURL', u'ws://localhost:8080/ws')
-    realm = os.environ.get('CBREALM', u'realm1')
-
+    url = "ws://crossbar:8080/ws"
+    realm = config["SERVER"]["realm"]
+    
     # parse command line parameters
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug output.')
     parser.add_argument('--url', dest='url', type=six.text_type, default=url, help='The router URL (default: "ws://localhost:8080/ws").')
     parser.add_argument('--realm', dest='realm', type=six.text_type, default=realm, help='The realm to join (default: "realm1").')
-
+    
     args = parser.parse_args()
 
     # start logging

@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+    ffbo.processor:
+        container_name: ffbo.processor
+        ports: ["8081:8081", "8082:8082"]
+        tty: true
+        networks:
+            - ffbonet
+        build:
+            context: .
+            dockerfile: ./Dockerfile
+        image: fruitflybrain/ffbo.processor:local
+networks:
+    ffbonet:
+        external: true

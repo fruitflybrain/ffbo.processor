@@ -1,3 +1,5 @@
+python /ffbo.processor/config.py --path /ffbo.processor/components/.crossbar/ --filename docker_config.json
+
 BASEDIR=$(dirname "$0")
 cd $BASEDIR
 
