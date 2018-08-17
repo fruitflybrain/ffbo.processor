@@ -4,6 +4,8 @@ import simplejson as json
 
 from configparser import ConfigParser
 
+from autobahn.wamp.auth import derive_key
+
 # Grab configuration from file
 root = os.path.expanduser("/")
 home = os.path.expanduser("~")
@@ -16,20 +18,26 @@ config_files.append(os.path.join(root, "config", "config.ini"))
 config_files.append(os.path.join(filepath, "config.ini"))
 config = ConfigParser()
 configured = False
+file_type = 0
 for config_file in config_files:
     if os.path.exists(config_file):
         config.read(config_file)
         configured = True
         break
+    file_type += 1
 if not configured:
     raise Exception("No config file exists for this component")
 
 # Create proper address to serve content from based on config file
 ssl = eval(config["AUTH"]["ssl"])
 websockets = "wss" if ssl else "ws"
-ip = config["SERVER"]["ip"]
+if "ip" in config["SERVER"]:
+    ip = config["SERVER"]
+else:
+    ip = "localhost"
 port = config["NLP"]["expose-port"]
-processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
+processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}    
+
 
 # Replace proper address into js file
 jsin = open("/ffbo.neuronlp/js/NeuroNLP.js", "r").read()
@@ -38,56 +46,20 @@ jsfile = open("/ffbo.neuronlp/js/NeuroNLP.js", "w")
 jsfile.write(jsout)
 jsfile.close()
 
-from autobahn.wamp.auth import derive_key
 
 # Replace user_data.json
-userdata = eval(open("/ffbo.processor/components/processor_component/data/user_data.json", "r").read())
+with open("/ffbo.processor/components/processor_component/data/user_data.json", "r") as f:
+    userdata = json.load(f)
 username = config["USER"]["user"]
 salt = config["USER"]["salt"]
-secret = derive_key(secret = config["USER"]["secret"], salt = config["USER"]["salt"], iterations = int(userdata["_default"]["1"]["auth_details"]["iterations"]), keylen = int(userdata["_default"]["1"]["auth_details"]["keylen"]))
-userstr = """
-{
-    "_default": {
-        "1": {
-            "username": "%(username)s",
-            "user_details": {
-                "lname": "",
-                "position": "",
-                "email": "",
-                "fname": "",
-                "affiliation": ""
-            },
-            "auth_details": {
-                "role": "components",
-                "secret": "%(secret)s",
-                "salt": "%(salt)s",
-                "iterations": 5000,
-                "keylen": 32
-            }
-        },
-        "2": {
-            "username": "guest",
-            "user_details": {
-                "lname": "",
-                "position": "",
-                "email": "",
-                "fname": "Anonymous",
-                "affiliation": ""
-            },
-            "auth_details": {
-                "role": "user",
-                "secret": "Y/w6jYBIOLM48hEKn9zRLx9gZCYwwrFW7K/ELtWzVT8=",
-                "salt": "guestsalt",
-                "iterations": 5000,
-                "keylen": 32
-            }
-        }
-    }
-}""" % {"username":username, "secret":secret, "salt":salt}
+secret = derive_key(secret = config["USER"]["secret"], salt = config["USER"]["salt"], iterations = userdata["_default"]["1"]["auth_details"]["iterations"], keylen = userdata["_default"]["1"]["auth_details"]["keylen"])
 
-userfile = open("/ffbo.processor/components/processor_component/data/user_data.json", "w")
-userfile.write(userstr)
-userfile.close()
+userdata["_default"]["1"]["auth_details"]["secret"] = secret
+userdata["_default"]["1"]["auth_details"]["salt"] = salt
+userdata["_default"]["1"]["username"] = username
+
+with open("/ffbo.processor/components/processor_component/data/user_data.json", "w") as f:
+    json.dump(userdata, f, indent=4 * ' ', separators=(',',':'))
 
 parser = argparse.ArgumentParser('config.py',description="Script for setting up Crossbar configuration file")
 
