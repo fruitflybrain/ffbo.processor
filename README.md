@@ -1,20 +1,12 @@
 # FFBO Processor Component
 [![Twitter Follow](https://img.shields.io/twitter/follow/flybrainobs.svg?style=social&label=Follow)](https://twitter.com/flybrainobs) ![license](https://img.shields.io/github/license/fruitflybrain/ffbo.processor.svg?style=flat-square) ![GitHub last commit](https://img.shields.io/github/last-commit/fruitflybrain/ffbo.processor.svg?style=flat-square) [![Docker Build Status](https://img.shields.io/docker/build/fruitflybrain/ffbo.processor.svg?style=flat-square)](https://hub.docker.com/r/fruitflybrain/ffbo.processor)
 ## Overview
-This package contains the main component of the [FFBO architecture](http://fruitflybrain.org/), the Processor. The processor uses the [NeuroNLP](http://github.com/fruitflybrain/ffbo.nlp_component) and [NeuroArch](http://github.com/fruitflybrain/ffbo.neuroarch_component) database components as backends for processing text queries and accessing neurophysiological data. It can additionally be attached to [FFBOLab](http://github.com/fruitflybrain/ffbolab) to improve processing speed by leveraging local computing resources (default is to use FFBO's servers). FFBOLab provides a GUI interface across ports 8081 and 8082 on the host machine's localhost. Port 8081 serves the NeuroNLP interface, while port 8082 serves the NeuroGFX interface.
-
-This package acts as multiple important parts of the FFBO web infrastruture, it contains:
-* The Crossbar WAMP router
-* The FFBO processor
-* The Web User Interface
-
-### Plans
-
-Currently this main package contains three distinct elements, in time this will be broken out into
-
-* A generic crossbar router
-* A web server
-* A processor server
+This package contains the processor in the backend of the system architecture of the [Fruit Fly Brain Observatory](http://fruitflybrain.org/) (FFBO).
+Its main functionality is to route messages between FFBO components and to host web services.
+It hosts
+* A [Crossbar.io](https://crossbar.io) WAMP router
+* The FFBO processor component
+* A web server for Web User Interface of [NeuroNLP](https://neuronlp.fruitflybrain.org) and [NeuroGFX](https://neurogfx.fruitflybrain.org)
 
 ## Installation and Execution
 
@@ -62,18 +54,17 @@ Note that the container can be both built and run with the following command:
 
 Downloading and building the repository and image are accomplished the same as in the above section. Accessing the bash interface for the container can be accomplished with:
 
-    docker run -p 8081:8081 -p 8082:8082 -it --net ffbonet --name ffbo.processor ffbo/processor:develop bash
+    docker run -p 8081:8081 -p 8082:8082 -it --net ffbonet --name ffbo.processor fruitflybrain/ffbo.processor:local bash
 
 Running the server is done with:
 
-    sh ffbo.processor/components/run_server.sh docker_config.json
+    sh /ffbo.processor/components/run_server.sh docker_config.json
 
 or
 
-    cd ffbo.processor/components
+    cd /ffbo.processor/components
+    python /ffbo.processor/config.py --path /ffbo.processor/components/.crossbar/ --filename docker_config.json
     crossbar start --config docker_config.json
-
-This will launch the router, processor and web interface on port 8080 or the local server. Details of the crossbar config can be seen in .crossbar/config.json
 
 ### Configuration
 
@@ -87,7 +78,7 @@ or, in the case that you don't have this repository installed, via:
 
 Once you have configured the .ini file, you can run it with:
 
-    docker run -p 8081:8081 -p 8082:8082 -it --net ffbonet --name ffbo.processor -v ~/.ffbo/config:/config jonmarty/ffbo.processor
+    docker run -p 8081:8081 -p 8082:8082 -it --net ffbonet --name ffbo.processor -v ~/.ffbo/config:/config fruitflybrain/ffbo.processor:local
 
 Or equivalently for other build methods. If you have configured a port, make sure to expose it by adding the '-p [INTERNAL PORT]:[EXTERNAL PORT]', where the internal port is the port you configured in the .ini file and the external port is the port on localhost that the output of the internal port is mapped to. Running without docker is the same process described above in the Manual Execution section.
 
