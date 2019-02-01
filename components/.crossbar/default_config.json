@@ -16,6 +16,14 @@
                                     "type":"static",
                                     "role":"anonymous"
                                 }
+                            },
+                            "options":{
+                                "enable_webstatus": false,
+                                "max_frame_size": 16777216,
+                                "auto_fragment_size": 65536,
+                                "open_handshake_timeout": 2500,
+                                "close_handshake_timeout": 1000,
+                                "auto_ping_size": 4
                             }
                         },
                         "/":{
