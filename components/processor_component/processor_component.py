@@ -135,7 +135,7 @@ class AppSession(ApplicationSession):
 
             gmail_user = ""
             gmail_pwd = ""
-            
+
             try:
                 s = smtplib.SMTP_SSL("smtp.gmail.com",465)
                 s.login(gmail_user, gmail_pwd)
@@ -179,7 +179,8 @@ class AppSession(ApplicationSession):
                 nlp_query:  string
             """
             request['user'] = details.caller
-            user_details = yield self.call('ffbo.auth_server.get_user',details.caller)
+            #user_details = yield self.call('ffbo.auth_server.get_user',details.caller)
+            user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
             if user_details: request['username'] = user_details['username']
             feedback = []
             self.log.info("process_nlp_query() accessed with request: {request}", request=request)
@@ -231,7 +232,7 @@ class AppSession(ApplicationSession):
                 nlp_res['user_msg'] = rpc_calls['user_msg']
                 for key in request:
                     if key not in nlp_res: nlp_res[key]=request[key]
-                
+
                 nlp_res['user'] = request['user']
                 # HARD CODE morphology if not specified
                 nlp_res['format'] = 'morphology' if not 'format' in request \
@@ -258,7 +259,7 @@ class AppSession(ApplicationSession):
                 yield self.call(rpc_calls['user_msg'], {'info':{'error':
                                         'Unable to contact NeuroArch server'}})
                 returnValue(None)
-            
+
         yield self.register(process_nlp_query, six.u('ffbo.processor.nlp_to_visualise'), RegisterOptions(details_arg='details'))
         self.log.debug("procedure process_nlp_query registered")
 
@@ -266,7 +267,7 @@ class AppSession(ApplicationSession):
         @inlineCallbacks # Progressive calls
         def process_nk_request(request,details=None):
             """
-                
+
             """
             request['user'] = details.caller
             user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
@@ -277,12 +278,8 @@ class AppSession(ApplicationSession):
             try:
                 #build up server calls
                 rpc_calls = {}
-                rpc_calls['na'] = "ffbo.%(s_type)s.query.%(s_id)s" % \
-                                              {'s_id':    request['servers']['na'],
-                                               's_type':  'na'}
-                rpc_calls['nk'] = "ffbo.%(s_type)s.launch.%(s_id)s" % \
-                                        {'s_id':    request['servers']['nk'],
-                                         's_type':  'nk'}
+                rpc_calls['na'] = u'ffbo.na.query.' + request['servers']['na']
+                rpc_calls['nk'] = u'ffbo.nk.launch.' + request['servers']['nk']
 
             except Exception as e:
                 self.log.warn("process_nk_request() failed due to incomplete server list in {servers}", servers= str(request['servers']))
@@ -298,7 +295,9 @@ class AppSession(ApplicationSession):
                 self.log.info("process_nk_request() accessed on NA server {server_id} with query: {query}",
                                       server_id=rpc_calls['na'], query=na_task)
 
-                na_res =  yield self.call(rpc_calls['na'], na_task)
+                #na_res =  yield self.call(rpc_calls['na'], na_task)
+                na_res_update =  yield self.call(rpc_calls['na'], na_task)
+                na_res.update(na_res_update)
                 self.log.info("process_nk_request() accessed on NA server {server_id} with result: {result}",
                               server_id=rpc_calls['na'],result=na_res)
 
@@ -308,7 +307,7 @@ class AppSession(ApplicationSession):
 
                 feedback = feedback_error(request,"Unable to contact server",e)
                 returnValue(feedback)
-            
+
             details.progress("Circuit data retrieved from NeuroArch")
 
             try:
@@ -323,17 +322,17 @@ class AppSession(ApplicationSession):
                 details.progress("Start execution in Neurokernel")
                 # Fprward result to the Front End
                 na_res["forward"] = six.u("ffbo.gfx.receive_partial." + str(na_res['user']))
-                nk_res =  yield self.call(rpc_calls['nk'], na_res, options=CallOptions(on_progress=on_progress))
-                
+                nk_res =  yield self.call(rpc_calls['nk'], na_res, options=CallOptions(on_progress=on_progress, timeout = 30000000000))
+
                 # Did we use a progressive result
                 if nk_res is None:
                     nk_res = progressive_result
-                
+
                 if nk_res == {}:
                     feedback =feedback_error(request,"Neurokernel returned zero results")
                     returnValue(feedback)
                 #details.progress("Circuit execution completed")
-                
+
             except ValueError as e:
                 self.log.warn("{server_id} failed to start simulation: {query}}",
                                       server_id=rpc_calls['nk'], query=na_res)
@@ -346,7 +345,7 @@ class AppSession(ApplicationSession):
 
                 feedback =feedback_error(request,"Execution Failure",e)
                 returnValue(feedback)
-            
+
             #details.progress("Neurokernel Started Execution")
 
             try:
@@ -359,7 +358,7 @@ class AppSession(ApplicationSession):
                     'reset'         : False
                     }
                 }
-                
+
                 if 'error' in vis_res:
                     raise RuntimeError('Visualisation component was unable to complete the request ')
 
@@ -367,15 +366,15 @@ class AppSession(ApplicationSession):
                 self.log.warn("Processor failed to access complete visualisation")
                 feedback = feedback_error(request,"Unable to create on visualiser",e)
                 returnValue(feedback)
-            
+
             #details.progress("Visualisation: Parsed result")
 
             self.log.debug("Process_NK_Request complete with request: {request} and result: {result}",
                            request=request,result=vis_res)
-            
+
             returnValue(vis_res)
-            
-            
+
+
         yield self.register(process_nk_request, six.u('ffbo.processor.nk_execute'), RegisterOptions(details_arg='details'))
         self.log.debug("procedure process_nk_request registered")
 
@@ -505,14 +504,14 @@ class AppSession(ApplicationSession):
             The request should have
                 user:       session_id for client
                 server:     session_id for na server
-                query:  neuroarcj json query object
+                query:  neuroarch json query object
             """
             try:
                 request['user'] = details.caller
                 user_details = yield self.call(six.u('ffbo.auth_server.get_user'),details.caller)
                 if user_details: request['username'] = user_details['username']
                 self.log.info("neuroarch_query() accessed with request: {request}", request=request)
-            
+
                 progressive_result = {}
                 def on_progress(p):
                     progressive_result.update(p)
@@ -555,8 +554,8 @@ class AppSession(ApplicationSession):
 
         yield self.register(flycircuit_neuron_query, six.u("ffbo.processor.fetch_flycircuit"), RegisterOptions(details_arg='details',concurrency=4))
         self.log.info("procedure ffbo.processor.fetch_flycircuit registered")
-        
-        
+
+
         @inlineCallbacks
         def neurokernel_query(request):
             """
@@ -576,7 +575,7 @@ class AppSession(ApplicationSession):
 
                 if result is None:
                     result = progressive_result
-                
+
                 # Catch no results and return
                 if result == "{}":
                     raise ValueError('Neurokernel returned zero results')
@@ -590,8 +589,8 @@ class AppSession(ApplicationSession):
                 raise e
                 feedback =feedback_error(server_id,"Unable to contact server",e)
                 returnValue(feedback)
-    
-        
+
+
         # REGISTER a procedure for relaying current servers to single ui
         def relay_server_information():
             self.log.debug("relay_server_information rpc called")
@@ -605,9 +604,9 @@ class AppSession(ApplicationSession):
 
 
 if __name__ == '__main__':
-    
+
     from configparser import ConfigParser
-    
+
     # Grab configuration from file
     root = os.path.expanduser("/")
     home = os.path.expanduser("~")
@@ -627,17 +626,17 @@ if __name__ == '__main__':
             break
     if not configured:
         raise Exception("No config file exists for this component")
-    
+
     # Crossbar.io connection configuration
     url = "ws://crossbar:8080/ws"
     realm = config["SERVER"]["realm"]
-    
+
     # parse command line parameters
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug output.')
     parser.add_argument('--url', dest='url', type=six.text_type, default=url, help='The router URL (default: "ws://localhost:8080/ws").')
     parser.add_argument('--realm', dest='realm', type=six.text_type, default=realm, help='The realm to join (default: "realm1").')
-    
+
     args = parser.parse_args()
 
     # start logging
