@@ -4,7 +4,7 @@ MAINTAINER Jonathan Marty <jonathan.n.marty@gmail.com>
 
 # Set up directories
 ADD . /ffbo.processor
-RUN git clone --single-branch -b local_build https://github.com/fruitflybrain/ffbo.neuronlp /ffbo.neuronlp
+RUN git clone --single-branch -b fbl https://github.com/fruitflybrain/ffbo.neuronlp /ffbo.neuronlp
 RUN mkdir /ffbo.neuronlp/img/flycircuit
 RUN git clone https://github.com/fruitflybrain/ffbo.lib /ffbo.neuronlp/lib
 RUN git clone https://github.com/fruitflybrain/ffbo.neurogfx /ffbo.neurogfx
