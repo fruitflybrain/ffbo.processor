@@ -28,8 +28,8 @@
             },
             "auth_details": {
                 "role": "user",
-                "secret": "Y/w6jYBIOLM48hEKn9zRLx9gZCYwwrFW7K/ELtWzVT8=",
-                "salt": "guestsalt",
+                "secret": "C5/c598Gme4oALjmdhVC2H25OQPK0M2/tu8yrHpyghA=",
+                "salt": "drosophila",
                 "iterations": 5000,
                 "keylen": 32
             }
