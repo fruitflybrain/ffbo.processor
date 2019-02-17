@@ -288,6 +288,7 @@ class AppSession(ApplicationSession):
 
 
             # Natural Language Processing
+            na_res = request
             try:
                 na_task = {'user': request['user'],
                            'command': {"retrieve":{"state":0}},
@@ -563,7 +564,7 @@ class AppSession(ApplicationSession):
             The request should have
                 user:       session_id for client
                 server:     session_id for na server
-                query:  neuroarcj json query object
+                query:  neuroarch json query object
             """
             try:
                 progressive_result = {}
