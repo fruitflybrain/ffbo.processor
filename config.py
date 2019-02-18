@@ -41,7 +41,7 @@ else:
         ip = res.text
     except Timeout:
         ip = "localhost"
-port = config["UNI"]["digits"]
+port = '{}{}'.format(2,config["UNI"]["digits"])
 processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
 
 
@@ -74,7 +74,7 @@ parser.add_argument("--path", default=config["CROSSBAR"]["path"], type=str, help
 
 add_nlp = parser.add_argument_group('nlp', 'arguments for setting up NeuroNLP')
 add_nlp.add_argument("--nlp-path", dest='nlp_path', default=config["NLP"]["path"], type=str, help="path to the NeuroNLP folder")
-add_nlp.add_argument("--nlp-port", dest='nlp_port', default=int(config["UNI"]["digits"]+20000, type=int, help="port number for hosting NeuroNLP, default is 8081")
+add_nlp.add_argument("--nlp-port", dest='nlp_port', default=int(config["UNI"]["digits"])+20000, type=int, help="port number for hosting NeuroNLP, default is 8081")
 
 
 add_gfx = parser.add_argument_group('gfx', 'arguments for setting up NeuroGFX')
