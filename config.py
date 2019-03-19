@@ -41,7 +41,7 @@ else:
         ip = res.text
     except Timeout:
         ip = "localhost"
-port = '{}{}'.format(2,config["UNI"]["digits"])
+port = '{}{}'.format(1,config["ID"]["digits"])
 processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
 
 
