@@ -91,7 +91,7 @@ parser.set_defaults(ssl=eval(config["AUTH"]["ssl"]))
 add_sandbox = parser.add_argument_group('sandbox', 'arguments for setting up sandbox')
 add_sandbox.add_argument('--no-sandbox', dest='sand_box', action='store_false', help='disable sandbox directory; sandbox is enabled by default')
 add_sandbox.add_argument("--sandbox-path", dest='sandbox_path', default=config["SANDBOX"]["path"], type=str, help="path to the sandbox folder")
-add_sandbox.add_argument("--sandbox-port", dest='sandbox_port', default=int(config["UNI"]["digits"])+int(config["ID"]["digits"])*10+10002, type=int, help="port number for hosting sandbox, default is 8083")
+add_sandbox.add_argument("--sandbox-port", dest='sandbox_port', default=int(config["ID"]["digits"])*10+10002, type=int, help="port number for hosting sandbox, default is 8083")
 parser.set_defaults(sandbox=eval(config["SANDBOX"]["sandbox"]))
 
 args = parser.parse_args()
