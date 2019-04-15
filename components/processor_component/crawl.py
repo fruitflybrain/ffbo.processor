@@ -37,7 +37,7 @@ class FlyCircuitDB(object):
             return self.flycircuit_cache[neuron]
 
         url = 'http://flycircuit.tw/modules.php?name=clearpage&op=detail_table&neuron=' + neuron
-        req = requests.get(url)
+        req = requests.get(url, timeout = 2.0)
         req.raise_for_status
         soup = BeautifulSoup(req.text, 'html.parser')
         tds = soup.find_all('td')
