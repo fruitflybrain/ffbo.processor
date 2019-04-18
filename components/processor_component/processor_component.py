@@ -313,7 +313,7 @@ class AppSession(ApplicationSession):
 
             try:
                 na_res['user'] = request['user']
-                if 'neuron_list' request:
+                if 'neuron_list' in request:
                     na_res['neuron_list'] = request['neuron_list']
 
                 progressive_result = {}
