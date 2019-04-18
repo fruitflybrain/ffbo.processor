@@ -313,7 +313,8 @@ class AppSession(ApplicationSession):
 
             try:
                 na_res['user'] = request['user']
-                na_res['neuron_list'] = request['neuron_list']
+                if 'neuron_list' request:
+                    na_res['neuron_list'] = request['neuron_list']
 
                 progressive_result = {}
                 def on_progress(p):
@@ -517,7 +518,7 @@ class AppSession(ApplicationSession):
                 def on_progress(p):
                     progressive_result.update(p)
 
-                print request
+                #print request
                 result =  yield self.call(six.u('ffbo.na.query.'+str(request['server'])), request, options=CallOptions(on_progress=on_progress))
                 self.log.info("na_query returned with result")
 
