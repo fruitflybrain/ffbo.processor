@@ -19,7 +19,7 @@ ENV CBURL ws://crossbar:8080/ws
 ENV CBREALM realm1
 
 # install Autobahn|Python
-RUN pip install -U pip && pip install autobahn[twisted] && pip install crossbar==17.12.1
+RUN pip install -U pip && pip install autobahn[twisted]==18.12.1 && pip install crossbar==17.12.1
 
 # install ffbo.processor dependecies
 RUN pip install numpy==1.14.5
