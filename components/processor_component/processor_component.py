@@ -140,7 +140,7 @@ class AppSession(ApplicationSession):
                 s = smtplib.SMTP_SSL("smtp.gmail.com",465)
                 s.login(gmail_user, gmail_pwd)
             except Exception as e:
-                print e
+                print(e)
                 return "Failed to connect to SMTP server on gmail"
             try:
                 s.sendmail(sender, recipients, msg.as_string())
@@ -390,7 +390,7 @@ class AppSession(ApplicationSession):
                 yield self.feedback_log.info(template.format(user=user_details['username'],
                                                              feedback=feedback_message))
             except Exception as e:
-                print e
+                print(e)
                 self.log.warn("Failed to log user feedback: {user} {feedback}",
                             user=user,
                             feedback=feedback_message)
@@ -549,7 +549,7 @@ class AppSession(ApplicationSession):
             try:
                 res = self.fdb.parse_neuron(neuron)
             except Exception as e:
-                print e
+                print(e)
                 res = feedback_error(neuron,"Unable to fetch flycircuit database",e)
                 yield res
             returnValue(res)
