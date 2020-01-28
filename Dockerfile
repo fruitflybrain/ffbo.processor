@@ -3,12 +3,12 @@ FROM python:2
 MAINTAINER Jonathan Marty <jonathan.n.marty@gmail.com>
 
 # Set up directories
-ADD . /ffbo.processor
+RUN git clone --single-branch -b feature/hemibrain https://github.com/fruitflybrain/ffbo.processor /ffbo.processor
 RUN git clone --single-branch -b feature/localnlp https://github.com/fruitflybrain/ffbo.neuronlp /ffbo.neuronlp
 RUN mkdir /ffbo.neuronlp/img/flycircuit
-RUN git clone https://github.com/fruitflybrain/ffbo.lib /ffbo.neuronlp/lib
+RUN git clone --single-branch -b feature/hemibrain https://github.com/fruitflybrain/ffbo.lib /ffbo.neuronlp/lib
 RUN git clone https://github.com/fruitflybrain/ffbo.neurogfx /ffbo.neurogfx
-RUN git clone https://github.com/fruitflybrain/ffbo.lib /ffbo.neurogfx/lib
+RUN git clone --single-branch -b feature/hemibrain https://github.com/fruitflybrain/ffbo.lib /ffbo.neurogfx/lib
 
 # Set environment variables
 ENV HOME /
