@@ -11,6 +11,7 @@ git pull
 cd /ffbo.neurogfx/lib
 git pull
 
+cd /ffbo.processor/components
 python /ffbo.processor/config.py --path /ffbo.processor/components/.crossbar/ --filename docker_config.json
 
 cd $BASEDIR
