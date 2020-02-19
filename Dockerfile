@@ -1,10 +1,10 @@
 # Initialize the image
 FROM python:2
-MAINTAINER Jonathan Marty <jonathan.n.marty@gmail.com>
+MAINTAINER Yiyin Zhou <yiyin@ee.columbia.edu>
 
 # Set up directories
 RUN git clone --single-branch -b hemibrain https://github.com/fruitflybrain/ffbo.processor /ffbo.processor
-RUN git clone --single-branch -b feature/localnlp https://github.com/fruitflybrain/ffbo.neuronlp /ffbo.neuronlp
+RUN git clone --single-branch -b hemibrain https://github.com/fruitflybrain/ffbo.neuronlp /ffbo.neuronlp
 RUN mkdir /ffbo.neuronlp/img/flycircuit
 RUN git clone --single-branch -b hemibrain https://github.com/fruitflybrain/ffbo.lib /ffbo.neuronlp/lib
 RUN git clone https://github.com/fruitflybrain/ffbo.neurogfx /ffbo.neurogfx
