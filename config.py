@@ -41,20 +41,24 @@ else:
         ip = res.text
     except Timeout:
         ip = "localhost"
-port = int(config["ID"]["digits"])
+port = int(config["NLP"]["expose-port"])
 processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
 
+guest_user = config['GUEST']['user']
+guest_salt = config['GUEST']['salt']
+guest_secret = config['GUEST']['secret']
 
 # Replace proper address into js file
-jsin = open("../ffbo.neuronlp/js/NeuroNLP.js", "r").read()
-jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
-jsfile = open("../ffbo.neuronlp/js/NeuroNLP.js", "w")
+jsin = open(os.path.join(filepath, "../ffbo.neuronlp/js/NeuroNLP.js"), "r").read()
+# jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
+jsout = jsin.replace(""" "guest", "guestpass", "ws://localhost:8081/ws" """, """ "{}", "{}", "{}" """.format(guest_user, guest_secret))
+jsfile = open(os.path.join(filepath, "../ffbo.neuronlp/js/NeuroNLP.js"), "w")
 jsfile.write(jsout)
 jsfile.close()
 
 
 # Replace user_data.json
-with open("components/processor_component/data/user_data.json", "r") as f:
+with open(os.path.join(filepath, "components/processor_component/data/user_data.json"), "r") as f:
     userdata = json.load(f)
 username = config["USER"]["user"]
 salt = config["USER"]["salt"]
@@ -64,7 +68,15 @@ userdata["_default"]["1"]["auth_details"]["secret"] = secret
 userdata["_default"]["1"]["auth_details"]["salt"] = salt
 userdata["_default"]["1"]["username"] = username
 
-with open("components/processor_component/data/user_data.json", "w") as f:
+username = "guest"
+salt = "guestsalt"
+secret = derive_key(secret = "guestpass", salt = "guestsalt", iterations = userdata["_default"]["2"]["auth_details"]["iterations"], keylen = userdata["_default"]["2"]["auth_details"]["keylen"])
+
+userdata["_default"]["2"]["auth_details"]["secret"] = secret
+userdata["_default"]["2"]["auth_details"]["salt"] = salt
+userdata["_default"]["2"]["username"] = username
+
+with open(os.path.join(filepath, "components/processor_component/data/user_data.json"), "w") as f:
     json.dump(userdata, f, indent=4 * ' ', separators=(',',':'))
 
 parser = argparse.ArgumentParser('config.py',description="Script for setting up Crossbar configuration file")
@@ -74,12 +86,12 @@ parser.add_argument("--path", default=config["CROSSBAR"]["path"], type=str, help
 
 add_nlp = parser.add_argument_group('nlp', 'arguments for setting up NeuroNLP')
 add_nlp.add_argument("--nlp-path", dest='nlp_path', default=config["NLP"]["path"], type=str, help="path to the NeuroNLP folder")
-add_nlp.add_argument("--nlp-port", dest='nlp_port', default=int(config["ID"]["digits"])*10+10000, type=int, help="port number for hosting NeuroNLP, default is 8081")
+add_nlp.add_argument("--nlp-port", dest='nlp_port', default=int(config["NLP"]["port"]), type=int, help="port number for hosting NeuroNLP, default is 8081")
 
 
 add_gfx = parser.add_argument_group('gfx', 'arguments for setting up NeuroGFX')
 add_gfx.add_argument("--gfx-path", dest='gfx_path', default=config["GFX"]["path"], type=str, help="path to the NeuroGFX folder")
-add_gfx.add_argument("--gfx-port", dest='gfx_port', default=int(config["ID"]["digits"])*10+10001, type=int, help="port number for hosting NeuroGFX, default is 8082")
+add_gfx.add_argument("--gfx-port", dest='gfx_port', default=int(config["GFX"]["port"]), type=int, help="port number for hosting NeuroGFX, default is 8082")
 
 add_ssl = parser.add_argument_group('ssl', 'arguments for setting up ssl connection')
 add_ssl.add_argument('--ssl', dest='ssl', action='store_true', help='enable ssl connection; ssl is disabled by default')
@@ -91,7 +103,7 @@ parser.set_defaults(ssl=eval(config["AUTH"]["ssl"]))
 add_sandbox = parser.add_argument_group('sandbox', 'arguments for setting up sandbox')
 add_sandbox.add_argument('--no-sandbox', dest='sand_box', action='store_false', help='disable sandbox directory; sandbox is enabled by default')
 add_sandbox.add_argument("--sandbox-path", dest='sandbox_path', default=config["SANDBOX"]["path"], type=str, help="path to the sandbox folder")
-add_sandbox.add_argument("--sandbox-port", dest='sandbox_port', default=int(config["ID"]["digits"])*10+10002, type=int, help="port number for hosting sandbox, default is 8083")
+add_sandbox.add_argument("--sandbox-port", dest='sandbox_port', default=int(config["SANDBOX"]["port"]), type=int, help="port number for hosting sandbox, default is 8083")
 parser.set_defaults(sandbox=eval(config["SANDBOX"]["sandbox"]))
 
 args = parser.parse_args()
@@ -99,7 +111,7 @@ args = parser.parse_args()
 print("Generating Crossbar configuration file...")
 
 # load default configuration
-default_config = json.load(open(os.path.join(os.path.dirname(__file__),"components/.crossbar/default_config.json")));
+default_config = json.load(open(os.path.join(filepath, "components/.crossbar/default_config.json")));
 
 # handle sandbox options
 if args.sandbox:
@@ -110,12 +122,12 @@ else:
 
 # handle SSL options
 if args.ssl:
-    for i in xrange(len(default_config["workers"][0]["transports"])):
+    for i in range(len(default_config["workers"][0]["transports"])):
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["certificate"] = args.ssl_cert
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["key"] = args.ssl_key
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["chain_certificates"][0] = args.chain_cert
 else:
-    for i in xrange(len(default_config["workers"][0]["transports"])):
+    for i in range(len(default_config["workers"][0]["transports"])):
         del default_config["workers"][0]["transports"][i]["endpoint"]["tls"]
 
 # handle NLP options
