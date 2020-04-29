@@ -27,7 +27,7 @@ import copy
 
 from autobahn.wamp.types import CallOptions
 
-from crawl import FlyCircuitDB
+from .crawl import FlyCircuitDB
 
 import traceback
 
@@ -64,7 +64,7 @@ class AppSession(ApplicationSession):
         try:
             with open('email_dict.json') as data_file:
                 email_dict = json.load(data_file)
-                self.log.info("Loading Email Dictionary with keys, {keys}",keys=email_dict.keys())
+                self.log.info("Loading Email Dictionary with keys, {keys}",keys=list(email_dict.keys()))
         except:
             self.log.warn("Loading Email Dictionary failed, no email notification on session leave.")
 
@@ -407,8 +407,8 @@ class AppSession(ApplicationSession):
         def on_session_leave(session_id):
             self.log.info("event for 'on_session_leave' received for session: " \
                     "{session}", session=session_id)
-            for stype in directory.keys():
-                if session_id in directory[stype].keys():
+            for stype in directory:
+                if session_id in directory[stype]:
                     self.log.info("Server disconnected. removing session" \
                             "{session} of type {stype}", session=session_id, stype=stype)
                     if email_dict is not None:
@@ -437,7 +437,11 @@ class AppSession(ApplicationSession):
         # REGISTER a procedure for registering a new server
         @inlineCallbacks
         def register_new_server(server_id,server_type,server_name):
-            if(not server_type in directory.keys()): returnValue({})
+            if(not server_type in directory):
+                print('not in directory')
+                print(server_type)
+                print(directory)
+                returnValue({})
             self.log.info("{server_type} server registered with name " \
                             "{server_name} and id {server_id}",
                             server_name=server_name, server_id=server_id, \
