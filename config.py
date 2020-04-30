@@ -52,7 +52,7 @@ guest_secret = config['GUEST']['secret']
 if os.path.isabs(config["NLP"]["path"]):
     jsfilename = os.path.join(config["NLP"]["path"], "js/NeuroNLP.js")
 else:
-    jsfilename = os.path.join(filepath, config["NLP"]["path"], "js/NeuroNLP.js")
+    jsfilename = os.path.join(filepath, 'components/.crossbar', config["NLP"]["path"], "js/NeuroNLP.js")
 jsin = open(jsfilename, "r").read()
 # jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
 jsout = jsin.replace('''"guest", "guestpass", "ws://localhost:8081/ws"''', '''"{}", "{}", "{}"'''.format(guest_user, guest_secret, processor_url))
