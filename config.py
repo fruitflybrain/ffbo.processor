@@ -49,10 +49,10 @@ guest_salt = config['GUEST']['salt']
 guest_secret = config['GUEST']['secret']
 
 # Replace proper address into js file
-jsin = open(os.path.join(filepath, "../ffbo.neuronlp/js/NeuroNLP.js"), "r").read()
+jsin = open(os.path.join(filepath, config["NLP"]["path"], "js/NeuroNLP.js"), "r").read()
 # jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
-jsout = jsin.replace(""" "guest", "guestpass", "ws://localhost:8081/ws" """, """ "{}", "{}", "{}" """.format(guest_user, guest_secret))
-jsfile = open(os.path.join(filepath, "../ffbo.neuronlp/js/NeuroNLP.js"), "w")
+jsout = jsin.replace('''"guest", "guestpass", "ws://localhost:8081/ws"''', '''"{}", "{}", "{}"'''.format(guest_user, guest_secret))
+jsfile = open(os.path.join(filepath, config["NLP"]["path"], "js/NeuroNLP.js"), "w")
 jsfile.write(jsout)
 jsfile.close()
 
