@@ -72,13 +72,10 @@ userdata["_default"]["1"]["auth_details"]["secret"] = secret
 userdata["_default"]["1"]["auth_details"]["salt"] = salt
 userdata["_default"]["1"]["username"] = username
 
-username = "guest"
-salt = "guestsalt"
-secret = derive_key(secret = "guestpass", salt = "guestsalt", iterations = userdata["_default"]["2"]["auth_details"]["iterations"], keylen = userdata["_default"]["2"]["auth_details"]["keylen"])
-
+secret = derive_key(secret = guest_secret, salt = guest_salt, iterations = userdata["_default"]["2"]["auth_details"]["iterations"], keylen = userdata["_default"]["2"]["auth_details"]["keylen"])
 userdata["_default"]["2"]["auth_details"]["secret"] = secret
-userdata["_default"]["2"]["auth_details"]["salt"] = salt
-userdata["_default"]["2"]["username"] = username
+userdata["_default"]["2"]["auth_details"]["salt"] = guest_salt
+userdata["_default"]["2"]["username"] = guest_user
 
 with open(os.path.join(filepath, "components/processor_component/data/user_data.json"), "w") as f:
     json.dump(userdata, f, indent=4 * ' ', separators=(',',':'))
