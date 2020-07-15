@@ -278,8 +278,8 @@ class AppSession(ApplicationSession):
             try:
                 #build up server calls
                 rpc_calls = {}
-                rpc_calls['na'] = u'ffbo.na.query.' + request['servers']['na']
-                rpc_calls['nk'] = u'ffbo.nk.launch.' + request['servers']['nk']
+                rpc_calls['na'] = u'ffbo.na.query.{}'.format(request['servers']['na'])
+                rpc_calls['nk'] = u'ffbo.nk.launch.{}'.format(request['servers']['nk'])
 
             except Exception as e:
                 self.log.warn("process_nk_request() failed due to incomplete server list in {servers}", servers= str(request['servers']))
