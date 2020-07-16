@@ -447,7 +447,7 @@ class AppSession(ApplicationSession):
                             server_name=server_name, server_id=server_id, \
                             server_type=server_type)
 
-            directory[server_type][server_id] = {'name':server_name}
+            directory[server_type][str(server_id)] = {'name':server_name}
 
             # PUBLISH updated server list after a new server registration
             yield self.publish(six.u('ffbo.server.update'), directory)
