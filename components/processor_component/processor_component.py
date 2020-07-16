@@ -408,7 +408,7 @@ class AppSession(ApplicationSession):
             self.log.info("event for 'on_session_leave' received for session: " \
                     "{session}", session=session_id)
             for stype in directory:
-                if session_id in directory[stype]:
+                if str(session_id) in directory[stype]:
                     self.log.info("Server disconnected. removing session" \
                             "{session} of type {stype}", session=session_id, stype=stype)
                     if email_dict is not None:
@@ -426,7 +426,7 @@ class AppSession(ApplicationSession):
                              self.log.info("Sending email failed with error {error}",error=str(e))
                          if email_res is not None:
                              self.log.info("Tried to send out email... {msg}", msg=email_res)
-                    del directory[stype][session_id]
+                    del directory[stype][str(session_id)]
                     yield self.publish(six.u('ffbo.server.update'), directory)
 
         yield self.subscribe(on_session_leave, six.u('wamp.session.on_leave'))
