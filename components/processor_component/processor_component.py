@@ -436,18 +436,21 @@ class AppSession(ApplicationSession):
 
         # REGISTER a procedure for registering a new server
         @inlineCallbacks
-        def register_new_server(server_id,server_type,server_name):
+        def register_new_server(server_id,server_type,server_config):
             if(not server_type in directory):
                 print('not in directory')
                 print(server_type)
                 print(directory)
                 returnValue({})
             self.log.info("{server_type} server registered with name " \
-                            "{server_name} and id {server_id}",
-                            server_name=server_name, server_id=server_id, \
-                            server_type=server_type)
+                            "{server_name} and id {server_id} {dataset}",
+                            server_name=server_config.get('server_name'),
+                            server_id=server_id, \
+                            server_type=server_type,
+                            dataset = 'for dataset {}'.format(server_config.get('dataset')) \
+                                      if 'dataset' in server_config else '')
 
-            directory[server_type][str(server_id)] = {'name':server_name}
+            directory[server_type][str(server_id)] = server_config
 
             # PUBLISH updated server list after a new server registration
             yield self.publish(six.u('ffbo.server.update'), directory)
