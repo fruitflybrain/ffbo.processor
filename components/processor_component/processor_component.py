@@ -444,7 +444,7 @@ class AppSession(ApplicationSession):
                 returnValue({})
             self.log.info("{server_type} server registered with name " \
                             "{server_name} and id {server_id} {dataset}",
-                            server_name=server_config.get('server_name'),
+                            server_name=server_config.get('name'),
                             server_id=server_id, \
                             server_type=server_type,
                             dataset = 'for dataset {}'.format(server_config.get('dataset')) \
