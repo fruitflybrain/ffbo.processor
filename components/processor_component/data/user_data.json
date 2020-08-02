@@ -28,7 +28,7 @@
             },
             "auth_details": {
                 "role": "user",
-                "secret": "Y/w6jYBIOLM48hEKn9zRLx9gZCYwwrFW7K/ELtWzVT8=",
+                "secret": "nhJ8JI03HbbMkvAHuPT7OMhdQ2LkK3uOJbCRK2g21Ww=",
                 "salt": "guestsalt",
                 "iterations": 5000,
                 "keylen": 32

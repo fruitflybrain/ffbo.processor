@@ -41,20 +41,28 @@ else:
         ip = res.text
     except Timeout:
         ip = "localhost"
-port = config["NLP"]["expose-port"]
-processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}    
+port = int(config["NLP"]["expose-port"])
+processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
 
+guest_user = config['GUEST']['user']
+guest_salt = config['GUEST']['salt']
+guest_secret = config['GUEST']['secret']
 
 # Replace proper address into js file
-jsin = open("/ffbo.neuronlp/js/NeuroNLP.js", "r").read()
-jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
-jsfile = open("/ffbo.neuronlp/js/NeuroNLP.js", "w")
+if os.path.isabs(config["NLP"]["path"]):
+    jsfilename = os.path.join(config["NLP"]["path"], "js/NeuroNLP.js")
+else:
+    jsfilename = os.path.join(filepath, 'components/.crossbar', config["NLP"]["path"], "js/NeuroNLP.js")
+jsin = open(jsfilename, "r").read()
+# jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
+jsout = jsin.replace('''"guest", "guestpass", "ws://localhost:8081/ws"''', '''"{}", "{}", "{}"'''.format(guest_user, guest_secret, processor_url))
+jsfile = open(jsfilename, "w")
 jsfile.write(jsout)
 jsfile.close()
 
 
 # Replace user_data.json
-with open("/ffbo.processor/components/processor_component/data/user_data.json", "r") as f:
+with open(os.path.join(filepath, "components/processor_component/data/user_data.json"), "r") as f:
     userdata = json.load(f)
 username = config["USER"]["user"]
 salt = config["USER"]["salt"]
@@ -64,7 +72,12 @@ userdata["_default"]["1"]["auth_details"]["secret"] = secret
 userdata["_default"]["1"]["auth_details"]["salt"] = salt
 userdata["_default"]["1"]["username"] = username
 
-with open("/ffbo.processor/components/processor_component/data/user_data.json", "w") as f:
+secret = derive_key(secret = guest_secret, salt = guest_salt, iterations = userdata["_default"]["2"]["auth_details"]["iterations"], keylen = userdata["_default"]["2"]["auth_details"]["keylen"])
+userdata["_default"]["2"]["auth_details"]["secret"] = secret
+userdata["_default"]["2"]["auth_details"]["salt"] = guest_salt
+userdata["_default"]["2"]["username"] = guest_user
+
+with open(os.path.join(filepath, "components/processor_component/data/user_data.json"), "w") as f:
     json.dump(userdata, f, indent=4 * ' ', separators=(',',':'))
 
 parser = argparse.ArgumentParser('config.py',description="Script for setting up Crossbar configuration file")
@@ -99,7 +112,7 @@ args = parser.parse_args()
 print("Generating Crossbar configuration file...")
 
 # load default configuration
-default_config = json.load(open(os.path.join(os.path.dirname(__file__),"components/.crossbar/default_config.json")));
+default_config = json.load(open(os.path.join(filepath, "components/.crossbar/default_config.json")));
 
 # handle sandbox options
 if args.sandbox:
@@ -110,12 +123,12 @@ else:
 
 # handle SSL options
 if args.ssl:
-    for i in xrange(len(default_config["workers"][0]["transports"])):
+    for i in range(len(default_config["workers"][0]["transports"])):
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["certificate"] = args.ssl_cert
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["key"] = args.ssl_key
         default_config["workers"][0]["transports"][i]["endpoint"]["tls"]["chain_certificates"][0] = args.chain_cert
 else:
-    for i in xrange(len(default_config["workers"][0]["transports"])):
+    for i in range(len(default_config["workers"][0]["transports"])):
         del default_config["workers"][0]["transports"][i]["endpoint"]["tls"]
 
 # handle NLP options

@@ -92,9 +92,9 @@ class AppSession(ApplicationSession):
                 #print "Registered user ",  db_rec
                 db.insert(db_rec)
             except Exception as e:
-                print e
+                print(e)
                 return {"error": "Unexpected error occured. Please try again"}
-            print "User added to database"
+            print("User added to database")
             send_email(user_details, pw, username)
             return {"success": "Successfuly registered. Please check your email for your password."}
 
@@ -121,16 +121,16 @@ class AppSession(ApplicationSession):
             try:
                 s = smtplib.SMTP(host='localhost', port=465)
             except Exception as e:
-                print e
-                print "Failed to start SMTP server on localhost"
+                print(e)
+                print("Failed to start SMTP server on localhost")
             try:
                 # Use a valid smtp server, otherwise the email notification won't be sent out
                 s.sendmail('no-reply@fruitflybrain.org', [user_details['email']], msg.as_string())
                 middleware.flush()
-                print "Email sent to " + user_details['email'] + " for " + user_details['fname'] + ' ' + user_details['lname']
+                print("Email sent to " + user_details['email'] + " for " + user_details['fname'] + ' ' + user_details['lname'])
             except Exception as e:
-                print e
-                print "Failed to send out email"
+                print(e)
+                print("Failed to send out email")
 
 
         def user_exists(username):

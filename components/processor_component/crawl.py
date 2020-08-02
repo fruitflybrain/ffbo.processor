@@ -1,5 +1,5 @@
 import requests, os
-import thread
+import _thread
 from bs4 import BeautifulSoup
 
 prefix_img_local = "/ffbo.neuronlp/img/flycircuit/"
@@ -58,7 +58,7 @@ class FlyCircuitDB(object):
         js['Images'] = {}
         for i in range(22, 22+2):
             img_src = "http://flycircuit.tw" + tds[i+3].find('a', href=True).get('href')
-            thread.start_new_thread(fetch_image, (img_src,))
+            _thread.start_new_thread(fetch_image, (img_src,))
             js['Images'][clean(tds[i].text)] = prefix_img_to_frontend + img_src.split('/')[-1]
 
         # Spatial Distribution

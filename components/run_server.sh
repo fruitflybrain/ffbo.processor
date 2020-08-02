@@ -1,6 +1,20 @@
-python /ffbo.processor/config.py --path /ffbo.processor/components/.crossbar/ --filename docker_config.json
 
 BASEDIR=$(dirname "$0")
+
+cd /ffbo.neuronlp
+git checkout js/NeuroNLP.js
+git pull
+cd /ffbo.neuronlp/lib
+git pull
+cd /ffbo.neurogfx
+git pull
+cd /ffbo.neurogfx/lib
+git pull
+
+cd /ffbo.processor/components
+git pull
+python /ffbo.processor/config.py --path /ffbo.processor/components/.crossbar/ --filename docker_config.json
+
 cd $BASEDIR
 
 # Decide which config to use based on first argument
