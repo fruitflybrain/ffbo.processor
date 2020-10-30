@@ -621,10 +621,10 @@ if __name__ == '__main__':
     home = os.path.expanduser("~")
     filepath = os.path.dirname(os.path.abspath(__file__))
     config_files = []
-    config_files.append(os.path.join(home, "config", "ffbo.processor.ini"))
-    config_files.append(os.path.join(root, "config", "ffbo.processor.ini"))
-    config_files.append(os.path.join(home, "config", "config.ini"))
-    config_files.append(os.path.join(root, "config", "config.ini"))
+    config_files.append(os.path.join(home, ".ffbo/config", "ffbo.processor.ini"))
+    config_files.append(os.path.join(root, ".ffbo/config", "ffbo.processor.ini"))
+    config_files.append(os.path.join(home, ".ffbo/config", "config.ini"))
+    config_files.append(os.path.join(root, ".ffbo/config", "config.ini"))
     config_files.append(os.path.join(filepath, "config.ini"))
     config = ConfigParser()
     configured = False
@@ -657,3 +657,4 @@ if __name__ == '__main__':
     # now actually run a WAMP client using our session class ClientSession
     runner = ApplicationRunner(url=args.url, realm=args.realm)
     runner.run(AppSession)
+    
