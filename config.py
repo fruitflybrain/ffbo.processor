@@ -89,11 +89,11 @@ add_nlp = parser.add_argument_group('nlp', 'arguments for setting up NeuroNLP')
 add_nlp.add_argument("--nlp-path", dest='nlp_path', default=config["NLP"]["path"], type=str, help="path to the NeuroNLP folder")
 add_nlp.add_argument("--nlp-port", dest='nlp_port', default=int(config["NLP"]["port"]), type=int, help="port number for hosting NeuroNLP, default is 8081")
 
-
-add_gfx = parser.add_argument_group('gfx', 'arguments for setting up NeuroGFX')
-add_gfx.add_argument("--gfx-path", dest='gfx_path', default=config["GFX"]["path"], type=str, help="path to the NeuroGFX folder")
-add_gfx.add_argument("--gfx-port", dest='gfx_port', default=int(config["GFX"]["port"]), type=int, help="port number for hosting NeuroGFX, default is 8082")
-
+if "GFX" in config:
+    add_gfx = parser.add_argument_group('gfx', 'arguments for setting up NeuroGFX')
+    add_gfx.add_argument("--gfx-path", dest='gfx_path', default=config["GFX"]["path"], type=str, help="path to the NeuroGFX folder")
+    add_gfx.add_argument("--gfx-port", dest='gfx_port', default=int(config["GFX"]["port"]), type=int, help="port number for hosting NeuroGFX, default is 8082")
+    
 add_ssl = parser.add_argument_group('ssl', 'arguments for setting up ssl connection')
 add_ssl.add_argument('--ssl', dest='ssl', action='store_true', help='enable ssl connection; ssl is disabled by default')
 add_ssl.add_argument("--ssl-cert", dest='ssl_cert', default=config["AUTH"]["cert"], help="path to the certificate file")
@@ -101,11 +101,12 @@ add_ssl.add_argument("--ssl-key", dest='ssl_key', default=config["AUTH"]["key"],
 add_ssl.add_argument("--chain-cert", dest='chain_cert', default=config["AUTH"]["chain-cert"], help="path to the chain certificate file")
 parser.set_defaults(ssl=eval(config["AUTH"]["ssl"]))
 
-add_sandbox = parser.add_argument_group('sandbox', 'arguments for setting up sandbox')
-add_sandbox.add_argument('--no-sandbox', dest='sand_box', action='store_false', help='disable sandbox directory; sandbox is enabled by default')
-add_sandbox.add_argument("--sandbox-path", dest='sandbox_path', default=config["SANDBOX"]["path"], type=str, help="path to the sandbox folder")
-add_sandbox.add_argument("--sandbox-port", dest='sandbox_port', default=int(config["SANDBOX"]["port"]), type=int, help="port number for hosting sandbox, default is 8083")
-parser.set_defaults(sandbox=eval(config["SANDBOX"]["sandbox"]))
+if "SANDBOX" in config:
+    add_sandbox = parser.add_argument_group('sandbox', 'arguments for setting up sandbox')
+    add_sandbox.add_argument('--no-sandbox', dest='sand_box', action='store_false', help='disable sandbox directory; sandbox is enabled by default')
+    add_sandbox.add_argument("--sandbox-path", dest='sandbox_path', default=config["SANDBOX"]["path"], type=str, help="path to the sandbox folder")
+    add_sandbox.add_argument("--sandbox-port", dest='sandbox_port', default=int(config["SANDBOX"]["port"]), type=int, help="port number for hosting sandbox, default is 8083")
+    parser.set_defaults(sandbox=eval(config["SANDBOX"]["sandbox"]))
 
 args = parser.parse_args()
 
@@ -136,9 +137,11 @@ default_config["workers"][0]["transports"][0]["endpoint"]["port"] = args.nlp_por
 default_config["workers"][0]["transports"][0]["paths"]["/"]["directory"] = args.nlp_path
 
 # handle GFX options
-default_config["workers"][0]["transports"][1]["endpoint"]["port"] = args.gfx_port
-default_config["workers"][0]["transports"][1]["paths"]["/"]["directory"] = args.gfx_path
-
+if args.gfx:
+    default_config["workers"][0]["transports"][1]["endpoint"]["port"] = args.gfx_port
+    default_config["workers"][0]["transports"][1]["paths"]["/"]["directory"] = args.gfx_path
+else:
+    del default_config["workers"][0]["transports"][1]
 # dump the reconfigured json
 json.dump(default_config, open(os.path.join(args.path, args.filename), "w"),
     indent=4, separators=(',',':'))
