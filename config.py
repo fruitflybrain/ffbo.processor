@@ -116,7 +116,7 @@ print("Generating Crossbar configuration file...")
 default_config = json.load(open(os.path.join(filepath, "components/.crossbar/default_config.json")));
 
 # handle sandbox options
-if args.sandbox:
+if "SANDBOX" in config:
     default_config["workers"][0]["transports"][2]["endpoint"]["port"] = args.sandbox_port
     default_config["workers"][0]["transports"][2]["paths"]["/"]["directory"] = args.sandbox_path
 else:
@@ -137,7 +137,7 @@ default_config["workers"][0]["transports"][0]["endpoint"]["port"] = args.nlp_por
 default_config["workers"][0]["transports"][0]["paths"]["/"]["directory"] = args.nlp_path
 
 # handle GFX options
-if args.gfx:
+if "GFX" in config:
     default_config["workers"][0]["transports"][1]["endpoint"]["port"] = args.gfx_port
     default_config["workers"][0]["transports"][1]["paths"]["/"]["directory"] = args.gfx_path
 else:
