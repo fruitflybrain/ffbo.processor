@@ -1,15 +1,3 @@
-from twisted.internet.defer import inlineCallbacks, returnValue, DeferredList, Deferred
-from twisted.logger import jsonFileLogObserver, Logger
-
-from twisted.internet import task, threads, reactor
-
-from autobahn.twisted.util import sleep
-from autobahn.twisted.wamp import ApplicationSession,  ApplicationRunner
-from autobahn.wamp.exception import ApplicationError
-from autobahn.wamp.types import RegisterOptions
-
-import smtplib
-from email.mime.text import MIMEText
 
 import json
 import os
@@ -18,14 +6,23 @@ import argparse
 import six
 import socket
 import txaio
-
-import pandas as pd
-
-import pdb
-
 import copy
 
-from autobahn.wamp.types import CallOptions
+
+import pandas as pd
+import smtplib
+
+from twisted.internet.defer import inlineCallbacks, returnValue, DeferredList, Deferred
+from twisted.logger import jsonFileLogObserver, Logger
+from twisted.internet import task, threads, reactor
+
+import autobahn
+from autobahn.twisted.util import sleep
+from autobahn.twisted.wamp import ApplicationSession,  ApplicationRunner
+from autobahn.wamp.exception import ApplicationError
+from autobahn.wamp.types import RegisterOptions, CallOptions
+
+from email.mime.text import MIMEText
 
 from .crawl import FlyCircuitDB
 
@@ -48,6 +45,7 @@ class AppSession(ApplicationSession):
 
         # Processor Data
         directory = {
+            'processor': {'autobahn': autobahn.__version__},
             'nlp':{},
             'na' :{},
             'nk': {}
@@ -657,4 +655,3 @@ if __name__ == '__main__':
     # now actually run a WAMP client using our session class ClientSession
     runner = ApplicationRunner(url=args.url, realm=args.realm)
     runner.run(AppSession)
-    
