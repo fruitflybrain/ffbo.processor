@@ -440,6 +440,9 @@ class AppSession(ApplicationSession):
                 print(server_type)
                 print(directory)
                 returnValue({})
+
+            if not server_config.get('autobahn', '0.0.0').split('.')[0] == autobahn.__version__.split('.')[0]:
+                returnValue(json.dumps('Autobahn version mismatch. Processor has version {}, and you have version {}'.format(autobahn.__version__, server_config.get('autobahn', 'unknown'))))
             self.log.info("{server_type} server registered with name " \
                             "{server_name} and id {server_id} {dataset}",
                             server_name=server_config.get('name'),
