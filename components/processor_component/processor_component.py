@@ -346,6 +346,7 @@ class AppSession(ApplicationSession):
                 feedback =feedback_error(request,"Execution Failure",e)
                 returnValue(feedback)
 
+            returnValue(nk_res)
             #details.progress("Neurokernel Started Execution")
 
             try:
@@ -441,8 +442,10 @@ class AppSession(ApplicationSession):
                 print(directory)
                 returnValue({})
 
-            if not server_config.get('autobahn', '0.0.0').split('.')[0] == autobahn.__version__.split('.')[0]:
-                returnValue(json.dumps('Autobahn version mismatch. Processor has version {}, and you have version {}'.format(autobahn.__version__, server_config.get('autobahn', 'unknown'))))
+            if server_type != 'nlp':
+                if not server_config.get('autobahn', '0.0.0').split('.')[0] == autobahn.__version__.split('.')[0]:
+                    self.log.info('autobahn version mismatch {server_type}, component autobahn version is {c_version}, and processor autobahn version is {p_version}'.format(server_type = server_type, c_version = server_config.get('autobahn', '0.0.0'), p_version = autobahn.__version__))
+                    returnValue(json.dumps('Autobahn version mismatch. Processor has version {}, and you have version {}'.format(autobahn.__version__, server_config.get('autobahn', 'unknown'))))
             self.log.info("{server_type} server registered with name " \
                             "{server_name} and id {server_id} {dataset}",
                             server_name=server_config.get('name'),
