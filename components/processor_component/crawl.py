@@ -1,8 +1,11 @@
 import requests, os
 import _thread
+import pathlib
 from bs4 import BeautifulSoup
 
-prefix_img_local = "/ffbo.neuronlp/img/flycircuit/"
+
+file_path = pathlib.Path(__file__).parent.absolute()
+prefix_img_local = os.path.join(file_path, '../../../ffbo.neuronlp/ffbo.neuronlp/img/flycircuit/')
 prefix_img_to_frontend = "/img/flycircuit/"
 
 def clean(s):
