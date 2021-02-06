@@ -7,7 +7,7 @@ import six
 import socket
 import txaio
 import copy
-
+import traceback
 
 import pandas as pd
 import smtplib
@@ -25,8 +25,7 @@ from autobahn.wamp.types import RegisterOptions, CallOptions
 from email.mime.text import MIMEText
 
 from .crawl import FlyCircuitDB
-
-import traceback
+from version import __version__
 
 class AppSession(ApplicationSession):
 
@@ -45,7 +44,7 @@ class AppSession(ApplicationSession):
 
         # Processor Data
         directory = {
-            'processor': {'autobahn': autobahn.__version__},
+            'processor': {'autobahn': autobahn.__version__, 'version': __version__},
             'nlp':{},
             'na' :{},
             'nk': {}

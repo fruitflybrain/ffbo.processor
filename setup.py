@@ -15,13 +15,13 @@ from setuptools import find_packages
 from setuptools import setup
 
 NAME =               'processor_component'
-VERSION =            '0.2'
-AUTHOR =             'Adam Tomkins'
-AUTHOR_EMAIL =       'a.tomkins@shef.ac.uk'
-MAINTAINER =         AUTHOR
-MAINTAINER_EMAIL =   AUTHOR_EMAIL
-DESCRIPTION =        'A wrapper for the OSP processor component'
-URL =                'TBD'
+VERSION =            '0.3.0'
+AUTHOR =             'Adam Tomkins, Nikul Ukani, Yiyin Zhou'
+AUTHOR_EMAIL =       'a.tomkins@shef.ac.uk, nikul@ee.columbia.edu, yiyin@ee.columbia.edu'
+MAINTAINER =         'Yiyin Zhou'
+MAINTAINER_EMAIL =   'yiyin@ee.columbia.edu'
+DESCRIPTION =        'Fruit Fly Brain Observatory processor component'
+URL =                'https://github.com/fruitflybrain/ffbo.processor'
 LONG_DESCRIPTION =   DESCRIPTION
 DOWNLOAD_URL =       URL
 LICENSE =            'BSD'
