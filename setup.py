@@ -59,8 +59,13 @@ if __name__ == "__main__":
         packages = PACKAGES,
         include_package_data = True,
         install_requires = [
-           'twisted >= 15.5.0',
-           'crossbar >= 17.2.1'
+           'crossbar >= 17.2.1',
+           'autobahn[twisted]'
+           'configparser',
+           'pandas',
+           'beautifulsoup4',
+           'tinydb',
+           'simplejson'
         ],
         eager_resources = ['components/processor_component/data/auth_dict.json', 'components/processor_component/data/email_dict.json']
         )
