@@ -60,12 +60,12 @@ if __name__ == "__main__":
         include_package_data = True,
         install_requires = [
            'crossbar >= 17.2.1',
-           'autobahn[twisted]'
+           'autobahn[twisted]',
            'configparser',
            'pandas',
            'beautifulsoup4',
            'tinydb',
-           'simplejson'
+           'simplejson',
         ],
         eager_resources = ['components/processor_component/data/auth_dict.json', 'components/processor_component/data/email_dict.json']
         )
