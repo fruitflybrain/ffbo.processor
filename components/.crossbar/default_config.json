@@ -406,7 +406,8 @@
                     "classname":"processor_component.processor_component.AppSession",
                     "role":"processor",
                     "realm":"realm1",
-                    "type":"class"
+                    "type":"class",
+                    "extra": {"clean_interval": 60}
                 },
                 {
                     "classname":"processor_component.authenticator.AppSession",

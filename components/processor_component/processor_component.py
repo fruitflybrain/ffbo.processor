@@ -73,7 +73,7 @@ class AppSession(ApplicationSession):
 
 
         lc = task.LoopingCall(trigger_memory_management)
-        interval = 60*30 # 30 mins
+        interval = 60*self.config.extra['clean_interval'] # in mins
         lc.start(interval)
 
         def get_process_info():
@@ -648,6 +648,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', '--debug', action='store_true', help='Enable debug output.')
     parser.add_argument('--url', dest='url', type=six.text_type, default=url, help='The router URL (default: "ws://localhost:8080/ws").')
     parser.add_argument('--realm', dest='realm', type=six.text_type, default=realm, help='The realm to join (default: "realm1").')
+    parser.add_argument('--interval', dest='interval', type=float, default=60., help='Time interval to clean memory used by inactive sessions.')
 
     args = parser.parse_args()
 
@@ -657,6 +658,7 @@ if __name__ == '__main__':
     else:
         txaio.start_logging(level='info')
 
+    extra = {"clean_interval": float(args.interval)}
     # now actually run a WAMP client using our session class ClientSession
-    runner = ApplicationRunner(url=args.url, realm=args.realm)
+    runner = ApplicationRunner(url=args.url, realm=args.realm, extra = extra)
     runner.run(AppSession)
