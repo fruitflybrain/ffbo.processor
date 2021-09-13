@@ -35,12 +35,12 @@ websockets = "wss" if ssl else "ws"
 if "ip" in config["SERVER"]:
     ip = config["SERVER"]["ip"]
 else:
-    try:
-        # first try to get public IP from aws to see if it is an aws ec2 instance.
-        res = requests.get('http://169.254.169.254/latest/meta-data/public-ipv4', timeout = 1.0)
-        ip = res.text
-    except Timeout:
-        ip = "localhost"
+    # try:
+    #     # first try to get public IP from aws to see if it is an aws ec2 instance.
+    #     res = requests.get('http://169.254.169.254/latest/meta-data/public-ipv4', timeout = 1.0)
+    #     ip = res.text
+    # except Timeout:
+    ip = "localhost"
 port = int(config["NLP"]["expose-port"])
 processor_url = "%(ws)s://%(ip)s:%(port)s/ws" % {"ws":websockets, "ip":ip, "port":port}
 
