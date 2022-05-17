@@ -27,7 +27,7 @@
                                 "close_handshake_timeout": 1000,
                                 "auto_ping_interval": 10000,
                                 "auto_ping_timeout": 0,
-                                "auto_ping_size": 4,
+                                "auto_ping_size": 12,
                                 "compression": {
                                     "deflate": {
                                         "request_no_context_takeover": false,
@@ -236,6 +236,17 @@
                                 {
                                     "cache":true,
                                     "uri":"ffbo.auth_server.get_user",
+                                    "allow":{
+                                        "subscribe":false,
+                                        "register":false,
+                                        "call":false,
+                                        "publish":false
+                                    },
+                                    "match":"exact"
+                                },
+                                {
+                                    "cache":true,
+                                    "uri":"ffbo.na.db_query",
                                     "allow":{
                                         "subscribe":false,
                                         "register":false,
