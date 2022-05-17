@@ -50,16 +50,17 @@ guest_secret = config['GUEST']['secret']
 
 # Replace proper address into js file
 if os.path.isabs(config["NLP"]["path"]):
-    jsfilename = os.path.join(config["NLP"]["path"], "js/NeuroNLP.js")
+    jsfilename = os.path.join(config["NLP"]["path"], "config/config.json")
 else:
-    jsfilename = os.path.join(filepath, 'components/.crossbar', config["NLP"]["path"], "js/NeuroNLP.js")
-jsin = open(jsfilename, "r").read()
-# jsout = jsin.replace("ws://localhost:8081/ws", processor_url)
-jsout = jsin.replace('''"guest", "guestpass", "ws://localhost:8081/ws"''', '''"{}", "{}", "{}"'''.format(guest_user, guest_secret, processor_url))
-jsfile = open(jsfilename, "w")
-jsfile.write(jsout)
-jsfile.close()
+    jsfilename = os.path.join(filepath, 'components/.crossbar', config["NLP"]["path"], "config/config.json")
+with open(jsfilename, "r") as f:
+    nlp_config = json.load(f)
+nlp_config["connection"]["url"] = processor_url
+nlp_config["connection"]["user"] = guest_user
+nlp_config["connection"]["secret"] = guest_secret
 
+with open(jsfilename, "w") as f:
+    json.dump(nlp_config, f, indent=2 * ' ', separators=(',',':'))
 
 # Replace user_data.json
 with open(os.path.join(filepath, "components/processor_component/data/user_data.json"), "r") as f:
