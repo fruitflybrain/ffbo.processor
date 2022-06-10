@@ -40,8 +40,12 @@
                             }
                         },
                         "/":{
-                            "directory":"../web/ffbo.neuronlp",
+                            "directory": "../web/ffbo.neuronlp",
                             "type":"static"
+                        },
+                        "neurogfx":{
+                            "directory": "../../../NeuGFX",
+                            "type": "static"
                         }
                     },
                     "endpoint":{
