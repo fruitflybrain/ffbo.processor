@@ -15,7 +15,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 NAME =               'processor_component'
-VERSION =            '0.3.0'
+VERSION =            '0.4.0'
 AUTHOR =             'Adam Tomkins, Nikul Ukani, Yiyin Zhou'
 AUTHOR_EMAIL =       'a.tomkins@shef.ac.uk, nikul@ee.columbia.edu, yiyin@ee.columbia.edu'
 MAINTAINER =         'Yiyin Zhou'
@@ -59,7 +59,7 @@ if __name__ == "__main__":
         packages = PACKAGES,
         include_package_data = True,
         install_requires = [
-           'crossbar >= 17.2.1',
+           'crossbar',
            'autobahn[twisted]',
            'configparser',
            'pandas',
