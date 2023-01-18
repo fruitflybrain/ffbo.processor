@@ -59,8 +59,8 @@ if __name__ == "__main__":
         packages = PACKAGES,
         include_package_data = True,
         install_requires = [
-           'crossbar',
-           'autobahn[twisted]',
+           'crossbar==22.6.1', # limit version due to a change in autobahn function name
+           'autobahn[twisted]==22.7.1', # higher version requires a fix in crossbar 4f4e2cb
            'configparser',
            'pandas',
            'beautifulsoup4',
