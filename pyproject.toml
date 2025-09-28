@@ -1,0 +1,58 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "processor_component"
+version = "0.4.1"
+description = "Fruit Fly Brain Observatory processor component"
+readme = "README.md"
+license = { text = "BSD" }
+authors = [
+  { name = "Adam Tomkins", email = "a.tomkins@shef.ac.uk" },
+  { name = "Nikul Ukani", email = "nikul@ee.columbia.edu" },
+  { name = "Yiyin Zhou", email = "yiyin@ee.columbia.edu" }
+]
+
+maintainers = [
+  { name = "Yiyin Zhou", email = "yiyin@ee.columbia.edu" }
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: BSD License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Software Development"
+]
+
+dependencies = [
+  "crossbar==23.1.2",
+  "configparser",
+  "pandas",
+  "beautifulsoup4",
+  "tinydb",
+  "simplejson"
+]
+
+[project.urls]
+Homepage = "https://github.com/fruitflybrain/ffbo.processor"
+Download = "https://github.com/fruitflybrain/ffbo.processor"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]
+
+[tool.setuptools]
+include-package-data = true
+
+# If these JSON files live inside the installed package, keep this.
+# If they are outside, use MANIFEST.in instead (see notes below).
+[tool.setuptools.package-data]
+processor_component = [
+  "components/processor_component/data/auth_dict.json",
+  "components/processor_component/data/email_dict.json"
+]
