@@ -11,11 +11,11 @@ license = { text = "BSD" }
 authors = [
   { name = "Adam Tomkins", email = "a.tomkins@shef.ac.uk" },
   { name = "Nikul Ukani", email = "nikul@ee.columbia.edu" },
-  { name = "Yiyin Zhou", email = "yiyin@ee.columbia.edu" }
+  { name = "Yiyin Zhou", email = "yiyin.zhou@fordham.edu" }
 ]
 
 maintainers = [
-  { name = "Yiyin Zhou", email = "yiyin@ee.columbia.edu" }
+  { name = "Yiyin Zhou", email = "yiyin.zhou@fordham.edu" }
 ]
 
 classifiers = [
@@ -49,8 +49,6 @@ include = ["*"]
 [tool.setuptools]
 include-package-data = true
 
-# If these JSON files live inside the installed package, keep this.
-# If they are outside, use MANIFEST.in instead (see notes below).
 [tool.setuptools.package-data]
 processor_component = [
   "components/processor_component/data/auth_dict.json",
